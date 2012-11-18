@@ -1,0 +1,14 @@
+CFLAGS += $(shell xeno-config --skin=native --cflags)
+LDFLAGS += $(shell xeno-config --skin=native --ldflags)
+LDFLAGS += -lrtdk
+
+all: xxx
+
+xxx: xxx.o
+	$(CC) xxx.o $(LDFLAGS) -o xxx
+xxx.o: xxx.c
+	$(CC) -c $(CFLAGS) xxx.c
+
+clean:
+	rm -f xxx.o xxx
+
