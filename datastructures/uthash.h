@@ -24,9 +24,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef UTHASH_H
 #define UTHASH_H 
 
-#include <string.h>   /* memcmp,strlen */
-#include <stddef.h>   /* ptrdiff_t */
-#include <stdlib.h>   /* exit() */
+#include <linux/string.h>   /* memcmp,strlen */
+#include <linux/stddef.h>   /* ptrdiff_t */
 
 /* These macros use decltype or the earlier __typeof GNU extension.
    As decltype is only available in newer compilers (VS2010 or gcc 4.3+
@@ -61,19 +60,19 @@ do {                                                                            
 typedef unsigned int uint32_t;
 typedef unsigned char uint8_t;
 #else
-#include <inttypes.h>   /* uint32_t */
+#include <linux/types.h>   /* uint32_t */
 #endif
 
 #define UTHASH_VERSION 1.9.7
 
 #ifndef uthash_fatal
-#define uthash_fatal(msg) exit(-1)        /* fatal error (out of memory,etc) */
+#define uthash_fatal(msg) rtdm_printk("ERROR : uthash error")  /* fatal error (out of memory,etc) */
 #endif
 #ifndef uthash_malloc
-#define uthash_malloc(sz) malloc(sz)      /* malloc fcn                      */
+#define uthash_malloc(sz) rtdm_malloc(sz)      /* malloc fcn                      */
 #endif
 #ifndef uthash_free
-#define uthash_free(ptr,sz) free(ptr)     /* free fcn                        */
+#define uthash_free(ptr,sz) rtdm_free(ptr)     /* free fcn                        */
 #endif
 
 #ifndef uthash_noexpand_fyi
