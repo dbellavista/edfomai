@@ -8,99 +8,57 @@
 #include <native/sem.h>
   
 #include  <rtdk.h>
-#define PLCperiod 7*1e9
-//#define Initial cad
+
+#include "program.h"
+
 
 RT_TASK task;
 
 RT_SEM readDone;
 RT_SEM executionDone;
-//RT_SEM writeDone;
-short stopped = 0;
 
-void reader(void *args){
+short stopped = 0;
+void* sensors;
+void* actuators;
+
+void sense(void *args);
+void execute(void *args);
+void act(void *agrs);
+
+void sense(void *args){
 	rt_task_set_periodic(NULL,TM_NOW,PLCperiod);
 	while(!stopped){
 		/*
 		 *	Read inputs status
 		*/
-		sleep(4);
+		sensors = readInputs();
+		
 		rt_sem_v(&readDone);
-		rt_printf("sensed\n");
+//		rt_printf("sensed\n");
 		rt_task_wait_period(NULL);
 	}
 }
 
-void writer(void *args){
+void act(void *args){
 	rt_task_set_periodic(NULL,TM_NOW,PLCperiod);
 	while(!stopped){
 		rt_sem_p(&executionDone,0);
 		/*
 		 *	Write outputs status
 		 */
-		sleep(1);
-		rt_printf("acted\n");
+		writeOutputs(actuators);
+//		rt_printf("acted\n");
 		rt_task_wait_period(NULL);
 	}
 }
 
-void step0(){
-}
-
-void step1(){
-}
-
-void step2(){
-}
-
-void step3(){
-}
-
-void step4(){
-}
-
-void step5(){
-}
-
 void executor(void *args){
 	rt_task_set_periodic(NULL,TM_NOW,PLCperiod);
-	short step = 0;
+	short step = (short)*args;
 	short actuators = 0;
 	while(!stopped){
 		rt_sem_p(&readDone,0);
 		int sensors = 287265;
-		switch(step){
-			case 0:
-				step0();
-				if("condition")
-					step = 1;
-				break;
-			case 1:
-				step1();
-				if("condition")
-					step = 2;
-				break;
-			case 2:
-				step2();
-				if("condition")
-					step = 3;
-				break;
-			case 3:
-				step3();
-				if("condition")
-					step = 4;
-				break;
-			case 4:
-				step4();
-				if("condition")
-					step = 5;
-				break;
-			case 5:
-				step5();
-				if("condition")
-					step = 0;
-				break;
-		}
 		sleep(2);
 		rt_sem_v(&executionDone);
 		rt_printf("executed\n");
