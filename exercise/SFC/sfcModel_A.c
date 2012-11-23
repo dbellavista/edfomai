@@ -16,6 +16,7 @@ RT_TASK task;
 
 RT_SEM readDone;
 RT_SEM executionDone;
+RT_SEM writeDone;
 
 short stopped = 0;
 void* sensors;
@@ -32,9 +33,7 @@ void sense(void *args){
 		 *	Read inputs status
 		*/
 		sensors = readInputs();
-		
 		rt_sem_v(&readDone);
-//		rt_printf("sensed\n");
 		rt_task_wait_period(NULL);
 	}
 }
@@ -47,7 +46,7 @@ void act(void *args){
 		 *	Write outputs status
 		 */
 		writeOutputs(actuators);
-//		rt_printf("acted\n");
+		rt_sem_v(&writeDone);
 		rt_task_wait_period(NULL);
 	}
 }
@@ -55,13 +54,20 @@ void act(void *args){
 void executor(void *args){
 	rt_task_set_periodic(NULL,TM_NOW,PLCperiod);
 	short step = (short)*args;
-	short actuators = 0;
+	actuators = 0;	// how to initialize the temporary value of actuators?
 	while(!stopped){
 		rt_sem_p(&readDone,0);
-		int sensors = 287265;
-		sleep(2);
+		int c;
+		for(c=0;c<nStep;c++){
+			if(stepStatus[c])
+				step[c](sensors);	// or equivalent
+		}
 		rt_sem_v(&executionDone);
-		rt_printf("executed\n");
+		rt_sem_p(&writeDone,0);
+		for(c=0;c<nStep;c++){
+			if(stepStatus[c])
+				condition[c](sensor,actuators);
+		}
 		rt_task_wait_period(NULL);
 	}
 	return;
@@ -76,9 +82,11 @@ void init_xenomai() {
 }
 
 void startup(){
+	stepInitializzator();
+
 	rt_sem_create(&readDone, "readSem", 0, S_PRIO);
 	rt_sem_create(&executionDone, "executionSem", 0, S_PRIO);
-	//rt_sem_create(&writeDone, "writeSem", 0, S_PRIO);
+	rt_sem_create(&writeDone, "writeSem", 0, S_PRIO);
 	
 	rt_task_create(&task, "readerTask", 0, 99, 0);
 	rt_task_start(&task, &reader, NULL);
@@ -109,8 +117,8 @@ void cleanup(){
 
 int main(int argn, char** argv){
 	init_xenomai();
-	rt_printf("initialized.\n");
-	rt_printf("starting up...\n");
+//	rt_printf("initialized.\n");
+//	rt_printf("starting up...\n");
 	startup();
 	rt_printf("waiting Ctrl+C\n");
 	wait_for_ctrl_c();
