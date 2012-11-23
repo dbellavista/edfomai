@@ -3,8 +3,8 @@
 #define nStep 3		// number of Steps
 
 short stepStatus[nStep];
-void* (*step[nStep];(void*);
-void* (*condition[nStep])(void*);
+//void* (*step[nStep])(void*);
+//void* (*condition[nStep])(void*);
 
 /*
  * void* readInputs():

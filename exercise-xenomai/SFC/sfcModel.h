@@ -11,6 +11,14 @@ typedef struct {
 	// actionDefinition;
 } action;
 
+typedef enum {
+	condition,
+	exclusiveChoice,
+	convergence,
+	parallel,
+	synchronization
+} structureType;
+
 typedef struct {
 	structureType type;
 	void* structure;
@@ -23,21 +31,16 @@ typedef struct {
 	structure link;
 } step;
 
-typedef enum {
-	condition,
-	exclusiveChoice,
-	convergence,
-	parallel,
-	synchronization
-} structureType;
-
 typedef struct {
 	step predecessor;
 	step successor;
-	short *check(void*,void*);	// return 0 if the check doesn't pass
+	short (*check)(void*,void*);	// it gets sensors and actuators and return 0 if the check doesn't pass
 } sCondition;
 
 typedef struct {
+	step predecessor;
+	step *successors;
+	short (**check)(void*,void*);
 } sExclusiveChoice;
 
 typedef struct {

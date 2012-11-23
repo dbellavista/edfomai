@@ -10,7 +10,7 @@
 #include  <rtdk.h>
 
 #include "program.h"
-
+#include "sfcModel.h"
 
 RT_TASK task;
 
