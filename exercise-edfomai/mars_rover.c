@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
@@ -7,93 +9,212 @@
 #include <native/timer.h>
 #include <rtdk.h>
 
-#include "edfomai-app.h"
+#include "../edfomai-app.h"
 
-#define WASTE_LOOPS 10000000
-#define PRINT_EACH  (int) WASTE_LOOPS/5
+#define timeUnit 1e8
+RTIME t;
 
+RT_TASK task;
 RT_TASK spawner;
-RT_TASK t1;
-RT_TASK t2;
-RT_TASK t3;
-void demo (void *arg){
+
+RT_SEM sensingDone;
+RT_SEM processingDone;
+RT_SEM exLock;
+short stopped = 0;
+
+int sharedResoruce;
+int shared = 0;
+
+unsigned long param[3][3];
+
+void comunicate(void *arg){
+	int res;
+	rt_task_set_periodic(NULL,TM_NOW,66*t);
+	while(!stopped){
+		rt_sem_p(&exLock);
+		res = sharedResource;
+		rt_sem_v(&exLock);
+		rt_printf("[comunicator] sending: %d",res);
+		rt_timer_spin(6*t);
+		rt_printf("[comunicator] sent: %d",res);
+		rt_task_wait_period(NULL);
+	}
+}
+
+//void (*process)(void *arg);
+//void (*act)(void *arg);
+
+void sense (void *arg){
 	int i;
+	int res;
+	unsigned long* param;
+	param = params;	// (unsigned long*)arg;
         RT_TASK *curtask;
         RT_TASK_INFO curtaskinfo;
-	
-	//rt_printf("!!!!\n");
-	//rt_task_sleep(1000000);        
-	//setbuf(stdout, NULL);
-	//setbuf(stderr, NULL);
-	
+
 	curtask = rt_task_self();
 	rt_task_inquire(curtask,&curtaskinfo);
         
-	rt_printf("!%s started\n", curtaskinfo.name);
+	rt_task_set_periodic(NULL,TM_NOW,param[0]*t);
 
-	for ( i=0 ; i < WASTE_LOOPS ; i++){
-		//rt_task_sleep(PRINT_EACH);
-		if (i % PRINT_EACH == 0 ){
-        		rt_task_inquire(curtask,&curtaskinfo);
-			rt_printf("->%s @ prio %d\n", curtaskinfo.name, curtaskinfo.cprio);
+	rt_printf("[%s] started\n", curtaskinfo.name);
+
+	while(!stopped){
+		for ( i=0 ; i < param[1]; i++){
+			rt_timer_spin(t);
+			rt_print("[%s] executing\n",curtaskinfo.name);
 		}
+		
+		rt_sem_p(&exLock);
+		sharedResource=shared;
+		rt_sem_v(&exLock);
+		
+		rt_sem_v(&sensingDone);
+
+		rt_task_wait_period(NULL);
 	}
-
-        rt_printf("]%s terminating\n", curtaskinfo.name);
 }
-int main (int argc, char * argv[]){
-        int ret=0;
-	char str0[10];
-	char str1[10];
-	char str2[10];
-	char str3[10];
-	unsigned long deadline1;
-	unsigned long deadline2;
-        unsigned long deadline3;
 
-	deadline1=200000;	//nsec
-	deadline2=350000;	//nsec
-	deadline3=250000;
-	sprintf(str0,"SPAWNER");
-	sprintf(str1,"T1");
-	sprintf(str2,"T2");
-	sprintf(str3,"T3");
-	
-        rt_print_auto_init(1);
-        mlockall(MCL_CURRENT|MCL_FUTURE);
-       
-	rt_task_shadow(&spawner, str0,50,T_CPU(0));
-	
-	rt_printf(">Starting edfomai..\n");
-        ret=edf_init();
-        if (ret)
-                return -1;
-        rt_printf(" Done!\n");
+void process(void *arg){
+	int i;
+	int res;
+	unsigned long* param;
+	param = params;	// (unsigned long*)arg;
+        RT_TASK *curtask;
+        RT_TASK_INFO curtaskinfo;
 
-        rt_printf(">Creating tasks\n");
-        ret=rt_task_create(&t1,str1,0,25,0);
-        ret=rt_task_create(&t2,str2,0,25,0);
-	ret=rt_task_create(&t3,str3,0,25,0);
-        rt_printf(">Starting tasks\n");
-        ret=edf_task_start(&t1,deadline1,&demo,0);
-        ret=edf_task_start(&t2,deadline2,&demo,0);
-        ret=edf_task_start(&t3,deadline3,&demo,0);
+	curtask = rt_task_self();
+	rt_task_inquire(curtask,&curtaskinfo);
         
-        rt_task_join(&t2);
-	rt_task_join(&t1);
-	rt_task_join(&t3);
-        rt_printf(">Disposing edfomai..\n");
-        ret=edf_dispose();
-        rt_printf(" Done!\n");
-	return 0;
-//        ret=rt_task_create(&spawner,str0,0,50,0);
-//	ret=rt_task_start(&spawner,&spawn,0);
-//	if (ret)
-//		return -1;
-//	ret=rt_task_join(&spawner);
-//	if (ret)
-//		return -1;
-//	return 0;
+	rt_task_set_periodic(NULL,TM_NOW,param[0]*t);
+
+	rt_printf("[%s] started\n", curtaskinfo.name);
+
+	while(!stopped){
+		rt_sem_p(&sensingDone);
+		
+		for ( i=0 ; i < param[1]; i++){
+			rt_timer_spin(t);
+			rt_print("[%s] executing\n",curtaskinfo.name);
+		}
+		
+		rt_sem_p(&exLock);
+		sharedResource+=1;
+		rt_sem_v(&exLock);
+		
+		rt_sem_v(&processingDone);
+
+		rt_task_wait_period(NULL);
+	}
 }
 
+void act(void *arg){
+	int i;
+	int res;
+	unsigned long* param;
+	param = params;	// (unsigned long*)arg;
+        RT_TASK *curtask;
+        RT_TASK_INFO curtaskinfo;
 
+	curtask = rt_task_self();
+	rt_task_inquire(curtask,&curtaskinfo);
+        
+	rt_task_set_periodic(NULL,TM_NOW,param[0]*t);
+
+	rt_printf("[%s] started\n", curtaskinfo.name);
+
+	while(!stopped){
+		rt_sem_p(&processingDone);
+
+		rt_sem_p(&exLock);
+		res=sharedResource;
+		rt_sem_v(&exLock);
+		for ( i=0 ; i < param[1]; i++){
+			rt_timer_spin(t);
+			rt_print("[%s] executing\n",curtaskinfo.name);
+		}
+		shared=res;
+
+		rt_task_wait_period(NULL);
+	}
+}
+
+void startup(){
+	
+	params[0][0]=11;	// t0	period
+	params[0][1]=2;		//	busy
+	params[0][2]=3;		//	deadline
+	
+	params[1][0]=11;	// t1	period
+	params[1][1]=3;		//	busy
+	params[1][2]=7;		//	deadline
+	
+	params[2][0]=11;	// t2	period
+	params[2][1]=2;		//	busy
+	params[2][2]=10;	//	deadline
+	
+//	act=process=sense;
+	
+	t = timeUnit;
+
+	rt_sem_create(&sensingDone, "sensorSem", 0, S_PRIO);
+	rt_sem_create(&processingDone, "processorSem", 0, S_PRIO);
+	rt_sem_create(&exLock, "sharedResource", 1, S_PRIO);
+	
+	rt_task_create(&task, "sensor", 0, 90, 0);
+	edf_task_start(&task, params[0][2]*t, &sense, NULL);
+
+	rt_task_create(&task, "processor", 0, 89, 0);
+	edf_task_start(&task, params[1][2]*t, &process, NULL);
+
+	rt_task_create(&task, "actuator", 0, 88, 0);
+	edf_task_start(&task, params[2][2]*t, &act, NULL);
+
+	rt_task_create(&task, "comunicator", 0, 87, 0);
+	edf_task_start(&task, 65*t, &act, NULL);
+}
+
+void init_edfomai() {
+	// Perform auto-init of rt_print buffers if the task doesn't do so
+	rt_print_auto_init(1);
+
+ 	// Avoids memory swapping for this program
+	mlockall(MCL_CURRENT|MCL_FUTURE);
+
+	// Initialize edf
+	if(edf_init())
+		exit(1);
+
+	// a cosa serve?
+//	rt_task_shadow(&spawner, str0,50,T_CPU(0));
+}
+
+void catch_signal(int sig) {
+	stopped=1;
+	rt_printf("--should I exit?--\n");
+	//exit(0);
+}
+
+void wait_for_ctrl_c() {
+	signal(SIGTERM, catch_signal);
+	signal(SIGINT, catch_signal);
+	// wait for SIGINT (CTRL-C) or SIGTERM signal
+	pause();
+}
+
+void cleanup(){
+	rt_printf("cleaned\n");
+	edf_dispose();
+}
+
+int main(int argn, char** argv){
+	init_edfomai();
+	rt_printf("initialized.\n");
+	rt_printf("starting up...\n");
+	startup();
+	rt_printf("waiting Ctrl+C\n");
+	wait_for_ctrl_c();
+	rt_printf("closing...\n");
+	cleanup();
+	return 0;
+}
