@@ -9,7 +9,8 @@
 
 #define TNAME_LEN 24
 #define DEADLINENOTSET -1
-
+#define DMISSEDQUEUE "EDF-DMISSED-Q"
+#define DMISSEDQUEUE_SIZE 1024
 /*
 * Command Type
 */
@@ -17,7 +18,8 @@ typedef enum EDFCommand {
 	CREATE_TASK=0,  	
 	START_TASK=1,
 	RESET_DEADLINE=2,
-	SET_DEADLINE=3
+	SET_DEADLINE=3,
+	STOP_WATCHD=4
 } EDFCommand;
 /*
 * Message interpretable by the edfomai driver module
