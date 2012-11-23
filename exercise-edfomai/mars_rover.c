@@ -5,6 +5,7 @@
 
 #include <native/task.h>
 #include <native/timer.h>
+#include <native/sem.h>
 #include <rtdk.h>
 
 #include "../edfomai-app.h"
@@ -20,16 +21,16 @@ RT_SEM processingDone;
 RT_SEM exLock;
 short stopped = 0;
 
-int sharedResoruce;
+int sharedResource;
 int shared = 0;
 
-unsigned long param[3][3];
+unsigned long params[3][3];
 
 void comunicate(void *arg){
 	int res;
 	rt_task_set_periodic(NULL,TM_NOW,66*t);
 	while(!stopped){
-		rt_sem_p(&exLock);
+		rt_sem_p(&exLock,0);
 		res = sharedResource;
 		rt_sem_v(&exLock);
 		rt_printf("[comunicator] sending: %d",res);
@@ -63,7 +64,7 @@ void sense (void *arg){
 			rt_print("[%s] executing\n",curtaskinfo.name);
 		}
 		
-		rt_sem_p(&exLock);
+		rt_sem_p(&exLock,0);
 		sharedResource=shared;
 		rt_sem_v(&exLock);
 		
@@ -89,14 +90,14 @@ void process(void *arg){
 	rt_printf("[%s] started\n", curtaskinfo.name);
 
 	while(!stopped){
-		rt_sem_p(&sensingDone);
+		rt_sem_p(&sensingDone,0);
 		
 		for ( i=0 ; i < param[1]; i++){
 			rt_timer_spin(t);
 			rt_print("[%s] executing\n",curtaskinfo.name);
 		}
 		
-		rt_sem_p(&exLock);
+		rt_sem_p(&exLock,0);
 		sharedResource+=1;
 		rt_sem_v(&exLock);
 		
@@ -122,9 +123,9 @@ void act(void *arg){
 	rt_printf("[%s] started\n", curtaskinfo.name);
 
 	while(!stopped){
-		rt_sem_p(&processingDone);
+		rt_sem_p(&processingDone,0);
 
-		rt_sem_p(&exLock);
+		rt_sem_p(&exLock,0);
 		res=sharedResource;
 		rt_sem_v(&exLock);
 		for ( i=0 ; i < param[1]; i++){

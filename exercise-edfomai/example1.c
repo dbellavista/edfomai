@@ -25,14 +25,11 @@ void demo (void *arg){
 		rt_printf("inquiring error %d:%s\n",-retval,strerror(-retval));
 	}
 	//print task name
-	params = (int *)arg;
+	params = (unsigned long *)arg;
 	RTIME p = 1e8; // 0.1 secs
 	//p*=params[0];
 	rt_task_set_periodic(NULL,TM_NOW,params[0]*p);
 	while(1){
-		//for(i=0;i<params[1]*10000;i++)
-		//	if(!(i%1000))
-		//		rt_printf("[%s] %d s, %d\n", curtaskinfo.name,param[0],param[1]);
 		rt_timer_spin(params[1]*p);
 		rt_task_wait_period(NULL);
 	}
