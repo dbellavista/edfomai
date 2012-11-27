@@ -1,6 +1,10 @@
+#ifdef MODULE
 #include <rtdm/rtdm_driver.h>
+#else
+#include <stdlib.h>
+#endif
+
 #include <native/task.h>
-#include <native/timer.h>
 #include "edfomai-data.h"
 
 /* 
@@ -13,9 +17,9 @@
 * Structure that wrap an RT_TASK and permit deadline handling
 */
 typedef struct rt_deadline_task {
-	nanosecs_abs_t deadline;
-	nanosecs_abs_t remain;
-	nanosecs_abs_t relative_deadline;
+	unsigned long deadline;
+	unsigned long remain;
+	unsigned long relative_deadline;
 	RT_TASK task;
 	RT_TASK_INFO task_info;
 } RT_DEADLINE_TASK;
@@ -23,7 +27,7 @@ typedef struct rt_deadline_task {
 /*
 * Recalculate tasks priorities considering deadline distance
 */
-int rt_dtask_recalculateprio();
+int rt_dtask_recalculateprio(void);
 /*
 * Update the TASL_INFO structue of the associated RT_TASK
 */
@@ -39,7 +43,7 @@ int rt_dtask_resetdeadline( RT_TASK * task);
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 */
-int rt_dtask_setdeadline(RT_TASK * task, nanosecs_abs_t newdeadline);
+int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline);
 /*
 * Create a Task with deadline specification.
 * Deadline is relative and might be interpreted as the maximum task duration permitted.
@@ -47,7 +51,7 @@ int rt_dtask_setdeadline(RT_TASK * task, nanosecs_abs_t newdeadline);
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 */
-int rt_dtask_create ( RT_TASK * task, nanosecs_abs_t deadline );
+int rt_dtask_create ( RT_TASK * task, unsigned long deadline );
 /*
 * Delete a RT_TASK.
 * This exclude the specified RT_TASK from the EDF based priority rearrangment.
@@ -58,10 +62,10 @@ int rt_dtask_delete ( RT_TASK * task );
 /*
 * Initialize the data structures needed for handling EDF based priorities arrangement.
 */
-int rt_dtask_init();
+int rt_dtask_init(void);
 /*
 * Free all data structures.
 */
-int rt_dtask_dispose();
+int rt_dtask_dispose(void);
 
 

@@ -142,14 +142,14 @@ int _wait_period( unsigned long * overruns_r ){
 * (depends on how you have compiled xenomai kernel patch). Otherwise can be seedt to 
 * DEADLINENOTSET .
 */
-int edf_task_start( RT_TASK * task, RTIME deadline, void(*procedure)(void *arg), void * arg ){
+int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(void *arg), void * arg ){
 	int ret;
 	EDFMessage message;
 
 	message.command = CREATE_TASK;
 	message.deadline = deadline;
-	ret=memcpy( &(message.task), task, sizeof(RT_TASK) );	 
-	if ( ret != &(message.task)){
+	ret = (int) memcpy( &(message.task), task, sizeof(RT_TASK) );	 
+	if ( ret != (int) &(message.task)){
 		printf("ERROR : something wrong with memcpy (%s)\n", strerror(-ret) );
 		return -1;
 	}
@@ -185,8 +185,8 @@ int edf_task_wait_period( unsigned long * overruns_r ){
 		printf("ERROR : cant retrieve RT_TASK descriptor, are we in asynch context??\n");
 		return -1;
 	}
-	ret = memcpy( &(message.task), currtask, sizeof(RT_TASK) );
-        if ( ret != &(message.task)){
+	ret = (int) memcpy( &(message.task), currtask, sizeof(RT_TASK) );
+        if ( ret != (int) &(message.task)){
                 printf("ERROR : something wrong with memcpy (%s)\n",strerror(-ret) );
                 return -1;
         }

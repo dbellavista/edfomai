@@ -1,9 +1,17 @@
-#include <linux/string.h> 
 #include "edfomai-drv-data.h"
+
+#ifdef MODULE
+#include <linux/string.h> 
+#else
+#include <string.h>
+#endif
+
+#include <native/timer.h>
+#include <native/task.h>
 #include "datastructures/uthash.h"
 
-#define MAXPRIO RTDM_TASK_HIGHEST_PRIORITY
-#define MINPRIO RTDM_TASK_LOWER_PRIORITY
+#define MAXPRIO 99 //RTDM_TASK_HIGHEST_PRIORITY
+#define MINPRIO 0  //RTDM_TASK_LOWER_PRIORITY
 
 /* 
 * RT_DEADLINE_TASK managable by uthash
@@ -19,8 +27,9 @@ static RT_DTASK * dtask_map = NULL;
 /*
 * Returns the priority associated with the remaining time 
 */
-static inline int _calculate_prio( nanosecs_abs_t remain, nanosecs_abs_t min_remain, 
-			nanosecs_abs_t max_remain){
+static inline int _calculate_prio( unsigned long remain, 
+			unsigned long min_remain, 
+			unsigned long max_remain){
 	return (int) ( remain * (MAXPRIO-MINPRIO) / (max_remain-min_remain) );
 }
 /*
@@ -32,12 +41,12 @@ static inline int _calculate_prio( nanosecs_abs_t remain, nanosecs_abs_t min_rem
 int rt_dtask_recalculateprio(){
 	RT_DTASK * rtdtask, * tmp;
 	unsigned int newprio;
-	nanosecs_abs_t remain , min_remain=0, max_remain=0;
+	unsigned long min_remain=0, max_remain=0;
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET){
-			rtdtask->dtask.remain = rtdtask->dtask.deadline - rtdm_clock_read();
-			min_remain = ( remain>=0 && remain < min_remain ? remain : min_remain );
-			max_remain = ( remain>=0 && remain > max_remain ? remain : max_remain );
+			rtdtask->dtask.remain = rtdtask->dtask.deadline - rt_timer_read();
+			min_remain = ( rtdtask->dtask.remain>=0 && rtdtask->dtask.remain < min_remain ? rtdtask->dtask.remain : min_remain );
+			max_remain = ( rtdtask->dtask.remain>=0 && rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
 		}
 	}
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
@@ -52,7 +61,9 @@ int rt_dtask_recalculateprio(){
 int rt_dtask_updateinfo ( RT_TASK * task ){
 	int ret;
 	RT_DTASK * rtdtask;
-	HASH_FIND_STR(dtask_map, task->rname, rtdtask);
+	RT_TASK_INFO task_info;
+	rt_task_inquire( task , &(task_info) );
+	HASH_FIND_STR(dtask_map, task_info.name, rtdtask);
 	ret=rt_task_inquire( &(rtdtask->dtask.task) , &(rtdtask->dtask.task_info) );
 	return ret;
 }
@@ -61,8 +72,10 @@ int rt_dtask_updateinfo ( RT_TASK * task ){
 */
 int rt_dtask_resetdeadline( RT_TASK * task){
 	RT_DTASK * rtdtask;
-	HASH_FIND_STR(dtask_map, task->rname, rtdtask);
-	rtdtask->dtask.deadline = rtdm_clock_read() + rtdtask->dtask.relative_deadline;
+	RT_TASK_INFO task_info;
+	rt_task_inquire( task , &(task_info) );
+	HASH_FIND_STR(dtask_map, task_info.name, rtdtask);
+	rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 	return 0;
 }
 /*
@@ -72,11 +85,13 @@ int rt_dtask_resetdeadline( RT_TASK * task){
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 */
-int rt_dtask_setdeadline(RT_TASK * task, nanosecs_abs_t newdeadline){
+int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 	RT_DTASK * rtdtask;
-	HASH_FIND_STR(dtask_map, task->rname, rtdtask);
+	RT_TASK_INFO task_info;
+	rt_task_inquire( task , &(task_info) );
+	HASH_FIND_STR(dtask_map, task_info.name, rtdtask);
 	rtdtask->dtask.relative_deadline = newdeadline;
-	rtdtask->dtask.deadline = rtdm_clock_read() + rtdtask->dtask.relative_deadline;
+	rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 	return 0;
 }
 /*
@@ -86,13 +101,19 @@ int rt_dtask_setdeadline(RT_TASK * task, nanosecs_abs_t newdeadline){
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 */
-int rt_dtask_create ( RT_TASK * task, nanosecs_abs_t deadline ){
+int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
 
-	RT_DTASK * rtdtask = (RT_DTASK*) rtdm_malloc(sizeof(RT_DTASK));
+	RT_DTASK * rtdtask;
+	#ifdef MODULE
+	rtdtask = (RT_DTASK*) rtdm_malloc(sizeof(RT_DTASK));
+	#else
+	rtdtask = (RT_DTASK*) malloc(sizeof(RT_DTASK));	
+	#endif
 	memcpy( &(rtdtask->dtask.task) , task , sizeof(RT_TASK));
 	rtdtask->dtask.relative_deadline = deadline;
-	rtdtask->dtask.deadline = rtdm_clock_read() + rtdtask->dtask.relative_deadline;
-	HASH_ADD_STR( dtask_map, dtask.task.rname , rtdtask);
+	rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
+	rt_task_inquire( &(rtdtask->dtask.task) , &(rtdtask->dtask.task_info) );
+	HASH_ADD_STR( dtask_map, dtask.task_info.name , rtdtask);
 	return 0;
 }
 /*
@@ -103,27 +124,37 @@ int rt_dtask_create ( RT_TASK * task, nanosecs_abs_t deadline ){
 */
 int rt_dtask_delete ( RT_TASK * task ){
 	RT_DTASK * rtdtask;
-	HASH_FIND_STR(dtask_map, task->rname, rtdtask);
+	RT_TASK_INFO task_info;
+	rt_task_inquire( task , &(task_info) );
+	HASH_FIND_STR(dtask_map, task_info.name, rtdtask);
 	HASH_DEL(dtask_map, rtdtask );
+	#ifdef MODULE
 	rtdm_free(rtdtask);
+	#else
+	free(rtdtask);
+	#endif
 	return 0;
 }
 /*
 * Initialize the data structures needed for handling EDF based priorities arrangement.
 */
-int rt_dtask_init(){
+int rt_dtask_init(void){
 	dtask_map = NULL;
 	return 0;
 }
 /*
 * Free all data structures.
 */
-int rt_dtask_dispose(){
+int rt_dtask_dispose(void){
 	RT_DTASK * rtdtask;
 	RT_DTASK * tmp;
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 	        HASH_DEL(dtask_map,rtdtask);
-	        rtdm_free(rtdtask);
+		#ifdef MODULE
+        	rtdm_free(rtdtask);
+        	#else
+        	free(rtdtask);
+        	#endif
 	}	
 	return 0;
 }

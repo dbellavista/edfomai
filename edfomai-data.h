@@ -16,6 +16,6 @@ typedef enum EDFCommand {
 typedef struct EDFMessage {
 	EDFCommand command;
 	RT_TASK task;
-	RTIME deadline;
+	unsigned long deadline;
 } EDFMessage;
 

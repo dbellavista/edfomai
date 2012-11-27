@@ -24,8 +24,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef UTHASH_H
 #define UTHASH_H 
 
+#ifdef MODULE
 #include <linux/string.h>   /* memcmp,strlen */
 #include <linux/stddef.h>   /* ptrdiff_t */
+#else
+#include <stdlib.h>
+#include <string.h>
+#include <stddef.h>
+#endif
+
 
 /* These macros use decltype or the earlier __typeof GNU extension.
    As decltype is only available in newer compilers (VS2010 or gcc 4.3+
@@ -60,20 +67,39 @@ do {                                                                            
 typedef unsigned int uint32_t;
 typedef unsigned char uint8_t;
 #else
+#ifdef MODULE
 #include <linux/types.h>   /* uint32_t */
+#else
+#include <inttypes.h>   /* uint32_t */
+#endif
 #endif
 
 #define UTHASH_VERSION 1.9.7
 
 #ifndef uthash_fatal
+
+#ifdef MODULE
 #define uthash_fatal(msg) rtdm_printk("ERROR : uthash error")  /* fatal error (out of memory,etc) */
+#else
+#define uthash_fatal(msg) exit(-1)
+#endif
 #endif
 #ifndef uthash_malloc
-#define uthash_malloc(sz) rtdm_malloc(sz)      /* malloc fcn                      */
+#ifdef MODULE
+#define uthash_malloc(sz) rtdm_malloc(sz)      /* malloc fcn */
+#else
+#define uthash_malloc(sz) malloc(sz)
 #endif
+#endif
+
 #ifndef uthash_free
-#define uthash_free(ptr,sz) rtdm_free(ptr)     /* free fcn                        */
+#ifdef MODULE
+#define uthash_free(ptr,sz) rtdm_free(ptr)     /* free fcn */
+#else
+#define uthash_free(ptr,sz) free(ptr)
 #endif
+#endif
+
 
 #ifndef uthash_noexpand_fyi
 #define uthash_noexpand_fyi(tbl)          /* can be defined to log noexpand  */

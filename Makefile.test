@@ -2,13 +2,25 @@ CFLAGS += $(shell xeno-config --skin=native --cflags)
 LDFLAGS += $(shell xeno-config --skin=native --ldflags)
 LDFLAGS += -lrtdk
 
+all: test
+
+clean:
+	rm edfomai-drv-data-test.o edfomai-drv-data-app.o edfomai-drv-data-test
 
 test: compiletest runtest
 
-compiletest:
-	$(CC) edfomai-drv-data-test.c $(CFLAGS) $(LDFLAGS)-o edfomai-drv-data-test
+compiletest: edfomai-drv-data-test
 
-runtest:
-	./edfomai-drv-data-test
+edfomai-drv-data-test: edfomai-drv-data-test.o edfomai-drv-data-app.o
+	$(CC) edfomai-drv-data-test.o edfomai-drv-data-app.o $(LDFLAGS) -o edfomai-drv-data-test
+
+edfomai-drv-data-app.o:
+	$(CC) -c edfomai-drv-data.c $(CFLAGS) -o edfomai-drv-data-app.o
+
+edfomai-drv-data-test.o:
+	$(CC) -c edfomai-drv-data-test.c $(CFLAGS) -o edfomai-drv-data-test.o
+
+runtest: edfomai-drv-data-test
+	$(shell ./edfomai-drv-data-test)
 
 
