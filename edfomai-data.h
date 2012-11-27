@@ -1,6 +1,15 @@
+#ifndef _EDFOMAI_DATA_
+#define _EDFOMAI_DATA_
+
+#ifdef MODULE
 #include <native/task.h>
+#else
+#include <native/task.h>
+#endif
+
 
 #define DEADLINENOTSET -1
+
 /*
 * Command Type
 */
@@ -19,3 +28,4 @@ typedef struct EDFMessage {
 	unsigned long deadline;
 } EDFMessage;
 
+#endif

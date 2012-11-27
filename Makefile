@@ -1,11 +1,35 @@
-obj-m += edfomai-drv.o
-edfomai-drv-objs := edfomai-drv-data.o
+ifneq ($(KERNELRELEASE),)
+# We were called by kbuild
 
-EXTRA_CFLAGS += -I/usr/include/xenomai/
+obj-m := edfomai-drv.o
+edfomai-drv-y := edfomai-drv-data.o # edfomai-data.o
 
-all:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+ccflags-y := -I/lib/modules/$(shell uname -r)/build/include/xenomai
+
+else  # We were called from command line
+
+KDIR := /lib/modules/$(shell uname -r)/build
+#KDIR := /home/cynove/src/kernel/linux-source-2.6.31
+PWD  := $(shell pwd)
+
+#EXTRA_CFLAGS += -I/lib/modules/$(shell uname -r)/build/include/xenomai  # -I/usr/include/xenomai/
+
+default:
+	@echo '    Building target module 2.6 kernel.'
+	@echo '    PLEASE IGNORE THE "Overriding SUBDIRS" WARNING'
+	#$(CC) -C edfomai-data.c $(EXTRA_CFLAGS)
+	#$(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+	$(MAKE) -C $(KDIR) M=$(PWD)
+	
+
+install:
+	$(MAKE) INSTALL_MOD_DIR=edfomai -C $(KDIR) M=$(PWD) modules_install
+	#./do_install.sh *.ko
+
+endif  # End kbuild check
+######################### Version independent targets ##########################
 
 clean:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+	$(MAKE) -C $(KDIR) M=$(PWD) clean
+	rm -f -r *.o *.ko .*cmd .tmp* core *.i
 

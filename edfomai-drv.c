@@ -3,11 +3,7 @@
 #include "edfomai-data.h"
 #include "edfomai-drv-data.h"
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Luca Mella <lucam.ko@gmail.com>");
-MODULE_DESCRIPTION("EDF Scheduler support");
-
-#define DEVICE_NAME "edf-scheduler"
+#define DEVICE_NAME "edfomai"
 #define SOME_SUB_CLASS 4711
 #define POLL_DELAY 1000
 
@@ -61,24 +57,27 @@ static ssize_t edf_rtdm_read_nrt(struct rtdm_dev_context *context, rtdm_user_inf
 */
 static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_info_t * user_info, const void *buf, size_t nbyte)
 {
-	EDFMessage message;
-	int res,status;
+	EDFMessage * message;
+	int status;
 	
 	if (nbyte!=sizeof(struct EDFMessage))
 	      return -1; /* You should talk to EDF-SCHED with EDFMessages */
 	
-	if ( rtdm_copy_from_user( user_info, &message, buf, sizeof(EDFMessage) ) == EFAULT )
-		return EFAULT;
+	message = (EDFMessage*) rtdm_malloc(sizeof(EDFMessage));
+	if ( rtdm_copy_from_user( user_info, message, buf, sizeof(EDFMessage) ) == EFAULT ){
+		rtdm_free(message);
+		return EFAULT;}
 	
-	switch (message.command)
+	switch (message->command)
 	{
 	      case CREATE_TASK:
 	              status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	              if (status){
 	                      rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
-	                      return status;
+				rtdm_free(message);
+				return status;
 	              }
-	              rt_dtask_create ( &(message.task) , message.deadline );
+	              rt_dtask_create ( &(message->task) , message->deadline );
 	              /* 
 	      	* Task should be started outside the module 
 	      	* because function pointer to new task main procedure 
@@ -88,7 +87,8 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	              status =rt_mutex_release(&edf_data_mutex);
 	              if (status){
 	                      rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
-	                      return status;
+				rtdm_free(message);
+				return status;
 	              }
 	
 	      break; 
@@ -103,29 +103,50 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      	status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	      	if (status){
 	      		rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
-	      		return status;
+	      		rtdm_free(message);
+			return status;
 	      	}
-	      	rt_dtask_setdeadline ( &(message.task) , message.deadline );
+	      	rt_dtask_setdeadline ( &(message->task) , message->deadline );
 	              status =rt_mutex_release(&edf_data_mutex);
 	              if (status){
 	                      rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
-	                      return status;
+	                	rtdm_free(message);  
+			    	return status;
 	              }
 	      break;		
 	      case RESET_DEADLINE:
 	      	status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	      	if (status){
 	      		rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
-	      		return status;
+	      		rtdm_free(message);
+			return status;
 	      	} 
-	              rt_dtask_resetdeadline ( &(message.task) );
+	              rt_dtask_resetdeadline ( &(message->task) );
 	              status =rt_mutex_release(&edf_data_mutex);
 	              if (status){
 	                      rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
-	                      return status;
+	                      	rtdm_free(message);
+				return status;
 	              }
 	      break;
+              case SET_DEADLINE:
+                status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
+                if (status){
+                        rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+                        rtdm_free(message);
+			return status;
+                }
+                      rt_dtask_setdeadline ( &(message->task) , message->deadline);
+                      status =rt_mutex_release(&edf_data_mutex);
+                      if (status){
+                              rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+                              	rtdm_free(message);
+				return status;
+                      }
+              break;
+
 	}
+	rtdm_free(message);
 	return nbyte;
 }
 
@@ -209,8 +230,8 @@ int __init edf_rtdm_init(void)
 		rtdm_printk("EDF sched driver registered without errors\n");
 		rt_dtask_init();
 		rt_mutex_create( &edf_data_mutex , DMUTEX_NAME );
-		rt_task_addhook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
-		rt_task_addhook(T_HOOK_DELETE, &edf_delete_hook);
+		rt_task_add_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
+		rt_task_add_hook(T_HOOK_DELETE, &edf_delete_hook);
 	}
 	else {
 		rtdm_printk("EDF sched driver registration failed: \n");
@@ -241,15 +262,14 @@ int __init edf_rtdm_init(void)
 * It unregister the RTDM device and free data structures.
 *
 */
-void __exit pwm_rtdm_exit(void)
+void __exit edf_rtdm_exit(void)
 {
-	int status;
 	rtdm_printk("EDF-SCHED: stopping\n");
-	rt_task_removehook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
-	rt_task_removehook(T_HOOK_DELETE, &edf_delete_hook);  
-	status = rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
+	rt_task_remove_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
+	rt_task_remove_hook(T_HOOK_DELETE, &edf_delete_hook);  
+	rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	rt_dtask_dispose();
-	status =rt_mutex_release(&edf_data_mutex);
+	rt_mutex_release(&edf_data_mutex);
 	rt_mutex_delete(&edf_data_mutex);
 	rtdm_dev_unregister(&device, 1000);
 	rtdm_printk("EDF-SCHED: uninitialized\n");
@@ -257,4 +277,9 @@ void __exit pwm_rtdm_exit(void)
 
 module_init(edf_rtdm_init);
 module_exit(edf_rtdm_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Luca Mella <lucam.ko@gmail.com>");
+MODULE_DESCRIPTION("EDF Scheduler support");
+MODULE_VERSION("0.1a");
 

@@ -1,10 +1,14 @@
+#ifndef _EDFOMAI_DRV_DATA_
+#define _EDFOMAI_DRV_DATA_
+
 #ifdef MODULE
 #include <rtdm/rtdm_driver.h>
+#include <native/task.h>
 #else
 #include <stdlib.h>
+#include <native/task.h>
 #endif
 
-#include <native/task.h>
 #include "edfomai-data.h"
 
 /* 
@@ -68,4 +72,4 @@ int rt_dtask_init(void);
 */
 int rt_dtask_dispose(void);
 
-
+#endif

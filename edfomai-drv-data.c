@@ -2,12 +2,14 @@
 
 #ifdef MODULE
 #include <linux/string.h> 
+#include <xenomai/native/timer.h>
+#include <xenomai/native/task.h>
 #else
 #include <string.h>
-#endif
-
 #include <native/timer.h>
 #include <native/task.h>
+#endif
+
 #include "datastructures/uthash.h"
 
 #define MAXPRIO 99 //RTDM_TASK_HIGHEST_PRIORITY

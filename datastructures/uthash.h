@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef MODULE
 #include <linux/string.h>   /* memcmp,strlen */
 #include <linux/stddef.h>   /* ptrdiff_t */
+#include <rtdm/rtdm_driver.h>
 #else
 #include <stdlib.h>
 #include <string.h>
