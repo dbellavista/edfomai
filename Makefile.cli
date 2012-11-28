@@ -1,14 +1,19 @@
 CFLAGS += $(shell xeno-config --skin=native --cflags)
 LDFLAGS += $(shell xeno-config --skin=native --ldflags)
 LDFLAGS += -lrtdk
+LDFLAGS += -lrtdm
 
-all: edfomai.o
+all : edfomai-app.o single_test
 
-edfomai: edfomai.o
-	$(CC) edfomai.o $(LDFLAGS) -o edfomai
-edfomai.o: edfomai.c
-	$(CC) -c $(CFLAGS) edfomai.c
+single_test : edfomai-app.o single_test.o
+	$(CC) single_test.o edfomai-app.o $(LDFLAGS) -o single_test
 
-clean:
-	rm -f edfomai.o edfomai
+single_test.o : single_test.c
+	$(CC) -c $(CFLAGS) single_test.c
+
+edfomai-app.o : edfomai-app.c
+	$(CC) -c $(CFLAGS) edfomai-app.c
+
+clean :
+	rm -f edfomai-app.o single_test.o single_test
 

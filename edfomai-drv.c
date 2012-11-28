@@ -1,4 +1,4 @@
-#include <linux/module.h>
+#include <linux//module.h>
 #include <native/mutex.h>
 #include "edfomai-data.h"
 #include "edfomai-drv-data.h"
@@ -73,7 +73,7 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      case CREATE_TASK:
 	              status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	              if (status){
-	                      rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+	                      rtdm_printk("Edfomai: [@write] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
 				rtdm_free(message);
 				return status;
 	              }
@@ -86,7 +86,7 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      	*/
 	              status =rt_mutex_release(&edf_data_mutex);
 	              if (status){
-	                      rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+	                      rtdm_printk("Edfomai: [@write] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
 				rtdm_free(message);
 				return status;
 	              }
@@ -102,14 +102,14 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      	*/
 	      	status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	      	if (status){
-	      		rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+	      		rtdm_printk("Edfomai: [@write] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
 	      		rtdm_free(message);
 			return status;
 	      	}
 	      	rt_dtask_setdeadline ( &(message->task) , message->deadline );
 	              status =rt_mutex_release(&edf_data_mutex);
 	              if (status){
-	                      rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+	                      rtdm_printk("Edfomai: [@write] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
 	                	rtdm_free(message);  
 			    	return status;
 	              }
@@ -117,14 +117,14 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      case RESET_DEADLINE:
 	      	status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	      	if (status){
-	      		rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+	      		rtdm_printk("Edfomai: [@write] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
 	      		rtdm_free(message);
 			return status;
 	      	} 
 	              rt_dtask_resetdeadline ( &(message->task) );
 	              status =rt_mutex_release(&edf_data_mutex);
 	              if (status){
-	                      rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+	                      rtdm_printk("Edfomai: [@write] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
 	                      	rtdm_free(message);
 				return status;
 	              }
@@ -132,14 +132,14 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
               case SET_DEADLINE:
                 status =rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
                 if (status){
-                        rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+                        rtdm_printk("Edfomai: [@write] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
                         rtdm_free(message);
 			return status;
                 }
                       rt_dtask_setdeadline ( &(message->task) , message->deadline);
                       status =rt_mutex_release(&edf_data_mutex);
                       if (status){
-                              rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+                              rtdm_printk("Edfomai: [@write] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
                               	rtdm_free(message);
 				return status;
                       }
@@ -169,9 +169,9 @@ static struct rtdm_device device = {
 	.device_class = RTDM_CLASS_EXPERIMENTAL,
 	.device_sub_class = SOME_SUB_CLASS,
 	.profile_version = 1,
-	.driver_name = "EDF-SCHED",
+	.driver_name = "EDFOMAI",
 	.driver_version = RTDM_DRIVER_VER(0, 0, 1),
-	.peripheral_name = "EDF Scheduler",
+	.peripheral_name = "EDFOMAI-SCHED-SVC",
 	.provider_name = "Luca Mella",
 	.proc_name = device.device_name,
 };
@@ -183,13 +183,13 @@ void edf_startswitch_hook( void * cookie )
 	int status;
 	status=rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	if (status){
-		rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+		rtdm_printk("Edfomai: [@start/switch] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
 		return;
 	}
 	rt_dtask_recalculateprio();
 	status=rt_mutex_release(&edf_data_mutex);
 	if (status){
-		rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+		rtdm_printk("Edfomai: [@start/switch] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
 		return;
 	}
 }
@@ -205,7 +205,7 @@ void edf_delete_hook( void * cookie )
 	
 	status=rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
 	if (status){
-		rtdm_printk("%s acquire failed with status %d", DMUTEX_NAME, status);
+		rtdm_printk("Edfomai: [@delete] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
 		return;
 	}
 	
@@ -214,7 +214,7 @@ void edf_delete_hook( void * cookie )
 	status=rt_mutex_release(&edf_data_mutex);
 	
 	if (status){
-		rtdm_printk("%s release failed with status %d", DMUTEX_NAME, status);
+		rtdm_printk("Edfomai: [@delete] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
 		return;
 	}
 }
@@ -227,32 +227,44 @@ int __init edf_rtdm_init(void)
 	int res;
 	res = rtdm_dev_register(&device);
 	if(res == 0) {
-		rtdm_printk("EDF sched driver registered without errors\n");
-		rt_dtask_init();
-		rt_mutex_create( &edf_data_mutex , DMUTEX_NAME );
-		rt_task_add_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
-		rt_task_add_hook(T_HOOK_DELETE, &edf_delete_hook);
+		rtdm_printk("Edfomai: [@init] driver registered correctly\n");
+		res=rt_dtask_init();
+		if (res!=0){
+			rtdm_printk("Edfomai: [@init] data structure initialization failed.\n");
+		}
+		res=rt_mutex_create( &edf_data_mutex , DMUTEX_NAME );
+                if (res!=0){
+                        rtdm_printk("Edfomai: [@init] mutex (%s) creation failed with status (%d).\n",DMUTEX_NAME,res);
+                }
+		res=rt_task_add_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
+                if (res!=0){
+                        rtdm_printk("Edfomai: [@init] start/switch hook failed registration with status (%d).\n",res);
+                }		
+		res=rt_task_add_hook(T_HOOK_DELETE, &edf_delete_hook);
+                if (res!=0){
+                        rtdm_printk("Edfomai: [@init] delete hook failed registration with status (%d).\n",res);
+                }
+
 	}
 	else {
-		rtdm_printk("EDF sched driver registration failed: \n");
+		rtdm_printk("Edfomai: [@init] driver registration failed\n");
 	    	switch(res) {
 	      case -EINVAL:
-	      	rtdm_printk("The device structure contains invalid entries. Check kernel log for further details.");
+	      	rtdm_printk("Edfomai: [@init] the device structure contains invalid entries. Check kernel log for further details.\n");
 	      break;
 	      case -ENOMEM:
-	      	rtdm_printk("The context for an exclusive device cannot be allocated.");
+	      	rtdm_printk("Edfomai: [@init] the context for an exclusive device cannot be allocated.\n");
 	      break;
 	      case -EEXIST:
-	      	rtdm_printk("The specified device name of protocol ID is already in use.");
+	      	rtdm_printk("Edfomai: [@init] the specified device name of protocol ID is already in use.\n");
 	      break;
 	      case -EAGAIN: 
-	      	rtdm_printk("Some /proc entry cannot be created.");
+	      	rtdm_printk("Edfomai: [@init] some /proc entry cannot be created.\n");
 	      break;
 	      default:
-	      	rtdm_printk("Unknown error code returned");
+	      	rtdm_printk("Edfomai: [@init] Unknown error code returned\n");
 	      break;
 	      }
-	  	rtdm_printk("\n");
 	  }
 	return res;
 }
@@ -264,7 +276,7 @@ int __init edf_rtdm_init(void)
 */
 void __exit edf_rtdm_exit(void)
 {
-	rtdm_printk("EDF-SCHED: stopping\n");
+	rtdm_printk("Edfomai: [@exit] removing module\n");
 	rt_task_remove_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
 	rt_task_remove_hook(T_HOOK_DELETE, &edf_delete_hook);  
 	rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
@@ -272,7 +284,7 @@ void __exit edf_rtdm_exit(void)
 	rt_mutex_release(&edf_data_mutex);
 	rt_mutex_delete(&edf_data_mutex);
 	rtdm_dev_unregister(&device, 1000);
-	rtdm_printk("EDF-SCHED: uninitialized\n");
+	rtdm_printk("Edfomai: [@exit] removal complete\n");
 }
 
 module_init(edf_rtdm_init);

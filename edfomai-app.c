@@ -3,10 +3,10 @@
 #include <string.h>
 #include <rtdm/rtdm.h>
 #include <native/mutex.h>
-#include "edfomai.h"
+#include "edfomai-app.h"
 
 #define DEF_PRIO 20
-#define DEVICE_NAME "edf-scheduler"
+#define DEVICE_NAME "edfomai"
 #define EDFOMAI_MTXNAME "edfomai-mtx"
 /*
 * EDF-Scheduler device file-descriptor
@@ -26,22 +26,22 @@ int _mtx_release();
 */
 int init_edfomai() {
 	int ret;
-	
 	if (device != -1)
 		return 0;
 
 	ret=rt_mutex_create( &edfomai_mutex , EDFOMAI_MTXNAME );
 
-	if (ret==ENOMEM){
-                printf("ERROR : not enought memory (%s)" , strerror(-ret) );
+	if (-ret==ENOMEM){
+                printf("ERROR : not enought memory (%s)\n" , strerror(-ret) );
                 return ret;
         }
-        if (ret==EPERM){
-                printf("ERROR : task cant create mutex in this context (%s)" , strerror(-ret) );
+        if (-ret==EPERM){
+                printf("ERROR : task cant create mutex in this context (%s)\n" , strerror(-ret) );
                 return ret;
         }
 	// EEXIST and 0 are welcome ..
 	device=rt_dev_open(DEVICE_NAME, 0);
+
 	if (device < 0) {
 		printf("ERROR : can't open device %s (%s)\n", DEVICE_NAME, 
 			strerror(-device));
@@ -54,7 +54,6 @@ int init_edfomai() {
 */
 int dispose_edfomai(){
 	int ret;
-	
 	ret = _mtx_acquire(TM_INFINITE);
 
 	if ( ret!=0 || device == -1){
@@ -80,20 +79,20 @@ int _mtx_acquire( RTIME timeout ){
 	int ret;
 	ret=rt_mutex_acquire( &edfomai_mutex, timeout);
 
-        if (ret==EINVAL){
-                printf("ERROR : not a valid mutex (%s)" , strerror(-ret) );
+        if (-ret==EINVAL){
+                printf("ERROR : not a valid mutex (%s)\n" , strerror(-ret) );
         }
-        if (ret==EWOULDBLOCK){
-                printf("WARNING : mutex locked by someone else (%s)" , strerror(-ret) );
+        if (-ret==EWOULDBLOCK){
+                printf("WARNING : mutex locked by someone else (%s)\n" , strerror(-ret) );
         }
-        if (ret==ETIMEDOUT){
-                printf("WARNING : mutex acquire timed out (%s)" , strerror(-ret) );
+        if (-ret==ETIMEDOUT){
+                printf("WARNING : mutex acquire timed out (%s)\n" , strerror(-ret) );
         }
-        if (ret==EPERM){
-                printf("ERROR : cant acquire mutex in this context (%s)",strerror(-ret) );
+        if (-ret==EPERM){
+                printf("ERROR : cant acquire mutex in this context (%s)\n",strerror(-ret) );
         }
-        if (ret==EINTR){
-                printf("WARNING : someone has interrupted the waiting (%s)",strerror(-ret));
+        if (-ret==EINTR){
+                printf("WARNING : someone has interrupted the waiting (%s)\n",strerror(-ret));
         }
 	return ret;
 }
@@ -104,14 +103,14 @@ int _mtx_release(){
         int ret;
 	ret=rt_mutex_release( &edfomai_mutex);
 
-        if (ret==EINVAL){
-                printf("ERROR : not a valid mutex (%s)" , strerror(-ret) );
+        if (-ret==EINVAL){
+                printf("ERROR : not a valid mutex (%s)\n" , strerror(-ret) );
         }
-        if (ret==EIDRM){
-                printf("ERROR : mutex descriptor in use has been deleted (%s)" , strerror(-ret) );
+        if (-ret==EIDRM){
+                printf("ERROR : mutex descriptor in use has been deleted (%s)\n" , strerror(-ret) );
         }
-        if (ret==EPERM){
-                printf("ERROR : cant acquire mutex in this context (%s)",strerror(-ret) );
+        if (-ret==EPERM){
+                printf("ERROR : cant acquire mutex in this context (%s)\n",strerror(-ret) );
         }
 	return ret;
 }
@@ -122,17 +121,17 @@ int _wait_period( unsigned long * overruns_r ){
 	int ret;
 	ret = rt_task_wait_period( overruns_r );
 
-	if (ret==EWOULDBLOCK){
-		printf("ERROR : task is not periodic (%s)" , strerror(-ret) );
+	if (-ret==EWOULDBLOCK){
+		printf("ERROR : task is not periodic (%s)\n" , strerror(-ret) );
 	}
-        if (ret==EINTR){
-                printf("ERROR : task has been interrupted (%s)" , strerror(-ret) );
+        if (-ret==EINTR){
+                printf("ERROR : task has been interrupted (%s)\n" , strerror(-ret) );
         }
-        if (ret==ETIMEDOUT){
-                printf("ERROR : task has waited too long (%s)" , strerror(-ret) );
+        if (-ret==ETIMEDOUT){
+                printf("ERROR : task has waited too long (%s)\n" , strerror(-ret) );
         }
-        if (ret==EPERM){
-                printf("ERROR : task cant sleep in this context (%s)" , strerror(-ret) );
+        if (-ret==EPERM){
+                printf("ERROR : task cant sleep in this context (%s)\n" , strerror(-ret) );
         }
 	return ret;
 }
