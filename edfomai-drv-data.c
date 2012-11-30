@@ -40,7 +40,7 @@ static inline int _calculate_prio( unsigned long remain,
 int rt_dtask_recalculateprio(){
 	RT_DTASK * rtdtask, * tmp;
 	unsigned int newprio;
-	unsigned long min_remain=0, max_remain=0;
+	unsigned long min_remain=0xffffffffffffffff, max_remain=0; // 2^64 -1
 	int count=0;
 	count=HASH_COUNT(dtask_map);
 	#ifdef DEBUG
@@ -48,37 +48,41 @@ int rt_dtask_recalculateprio(){
 	#endif
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET){
-			rtdtask->dtask.remain = rtdtask->dtask.deadline - rt_timer_read();
-			min_remain = ( rtdtask->dtask.remain>=0 && rtdtask->dtask.remain < min_remain ? rtdtask->dtask.remain : min_remain );
-			max_remain = ( rtdtask->dtask.remain>=0 && rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
-			rt_dtask_updateinfo( &(rtdtask->dtask.task) );
+			rtdtask->dtask.remain=(rtdtask->dtask.deadline > (unsigned long)rt_timer_read() ?
+					rtdtask->dtask.deadline - (unsigned long) rt_timer_read() : 0);
+			min_remain= ( rtdtask->dtask.remain < min_remain ? rtdtask->dtask.remain : min_remain );
+			max_remain= ( rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
+			rt_dtask_updateinfo( rtdtask->dtask.task );
 		}
 	}
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 	        newprio=_calculate_prio(rtdtask->dtask.remain, min_remain, max_remain );
 	        #ifdef DEBUG
-        	rtdm_printk("Edfomai: [@recalculateprio] task %s: oldP=%u newP=%u remain=%lu maxRemain=%lu minRemain=%lu\n",
+        	rtdm_printk("Edfomai: [@recalculateprio] task(%s) oldP(%u) newP(%u) remain(%lu) maxRem(%lu) minRem=(%lu)\n",
 				rtdtask->dtask.task_info.name, rtdtask->dtask.task_info.cprio, 
 				newprio, rtdtask->dtask.remain ,max_remain, min_remain );
         	#endif
-		rt_task_set_priority( &(rtdtask->dtask.task) , newprio );
+		if (newprio!=rtdtask->dtask.task_info.cprio){
+			rt_task_set_priority( rtdtask->dtask.task , newprio );
+		}
 	}
 	return 0;
 }
 /*
 * Update the TASL_INFO structue of the associated RT_TASK
+* Not really efficient at the moment.
 */
 int rt_dtask_updateinfo ( RT_TASK * task ){
 	int ret=-1;
 	RT_DTASK * rtdtask;
 	RT_TASK_INFO * task_info = (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
-	rt_task_inquire( task , task_info );
+	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
-	if (rtdtask!=NULL){
+	if (rtdtask){
         	#ifdef DEBUG
         	rtdm_printk("Edfomai: [@updateinfo] updating info of task %s\n",task_info->name);
         	#endif
-		ret=rt_task_inquire( &(rtdtask->dtask.task) , &(rtdtask->dtask.task_info) );
+		ret=rt_task_inquire( rtdtask->dtask.task , &(rtdtask->dtask.task_info) );
 	}
 	rtdm_free(task_info);
 	return ret;
@@ -92,7 +96,7 @@ int rt_dtask_resetdeadline( RT_TASK * task){
 	RT_TASK_INFO * task_info = (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
 	rt_task_inquire( task , task_info );
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
-	if (rtdtask!=NULL){
+	if (rtdtask){
         	#ifdef DEBUG
         	rtdm_printk("Edfomai: [@resetdeadline] resetting deadline of task %s\n",task_info->name);
         	#endif
@@ -113,9 +117,9 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 	int ret=-1;
 	RT_DTASK * rtdtask;
 	RT_TASK_INFO * task_info = (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
-	rt_task_inquire( task , task_info );
+	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
-	if (rtdtask!=NULL){
+	if (rtdtask){
         	#ifdef DEBUG
         	rtdm_printk("Edfomai: [@setdeadline] setting deadline of task %s to %lu\n",task_info->name, newdeadline);
         	#endif
@@ -133,27 +137,30 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 * Take a look at "A Tour of the Native API"
 */
 int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
-
 	RT_DTASK * rtdtask,* tmp;
 	#ifdef MODULE
 	rtdtask = (RT_DTASK*) rtdm_malloc(sizeof(RT_DTASK));
 	#else
 	rtdtask = (RT_DTASK*) malloc(sizeof(RT_DTASK));	
 	#endif
-	memcpy( &(rtdtask->dtask.task) , task , sizeof(RT_TASK));
+	//memcpy( &(rtdtask->dtask.task) , task , sizeof(RT_TASK));
+	rtdtask->dtask.task = task;
 	rtdtask->dtask.relative_deadline = deadline;
-	rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
-	rt_task_inquire( &(rtdtask->dtask.task) , &(rtdtask->dtask.task_info) );
+	rtdtask->dtask.deadline =  ((unsigned long) rt_timer_read()) + rtdtask->dtask.relative_deadline;
+	rt_task_inquire( rtdtask->dtask.task , &(rtdtask->dtask.task_info) );
 	HASH_FIND_STR( dtask_map, rtdtask->dtask.task_info.name, tmp);
 	if (tmp==NULL){
         	#ifdef DEBUG
-        	rtdm_printk("Edfomai: [@dt_create] creating dtask %s with deadline %lu\n",rtdtask->dtask.task_info.name, deadline);
+        	rtdm_printk("Edfomai: [@dt_create] creating dtask (%s) with deadline %lu\n",
+				rtdtask->dtask.task_info.name, deadline);
+                rtdm_printk("Edfomai: [@dt_create] dtask rname(%s)\n",
+				rtdtask->dtask.task->rname);
         	#endif
 		HASH_ADD_STR( dtask_map, dtask.task_info.name , rtdtask);
 		return 0;
 	}else{
  		#ifdef DEBUG
-        	rtdm_printk("Edfomai: [@dt_create] creation failed. Task %s already present\n",rtdtask->dtask.task_info.name);
+        	rtdm_printk("Edfomai: [@dt_create] creation failed. Task (%s) already present\n",rtdtask->dtask.task_info.name);
         	#endif
 	        #ifdef MODULE
         	rtdm_free(rtdtask);
@@ -174,9 +181,9 @@ int rt_dtask_delete ( RT_TASK * task ){
 	int ret=-1;
 	RT_DTASK * rtdtask;
 	RT_TASK_INFO * task_info= (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
-	rt_task_inquire( task , task_info );
+	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
-	if (rtdtask!=NULL){
+	if (rtdtask){
         	#ifdef DEBUG
         	rtdm_printk("Edfomai: [@dt_delete] deleting dtask %s\n",task_info->name);
         	#endif

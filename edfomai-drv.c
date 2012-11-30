@@ -75,6 +75,24 @@ static int _mtx_release(void){
          }
 	return 0;
 }
+static RT_TASK * _get_handle( char * rname ){
+	int status=0;
+	xnthread_t * task;
+	xnhandle_t handle; // pointer to a xnobject_t
+	//RT_TASK * rtask=NULL;
+	//status= rt_task_bind(rtask,rname,TM_NONBLOCK);
+	status=xnregistry_bind(rname, XN_NONBLOCK, XN_RELATIVE , &handle );
+        if (status){
+              rtdm_printk("Edfomai: [@get_handle] cant obtain (%s) handle from registry (%d)\n", rname,status);
+              return NULL;
+         }
+	task=xnregistry_fetch(handle);
+	if (task==NULL){
+		rtdm_printk("Edfomai: [@get_handle] cant fetch obtained handle (%s)\n",rname);
+		return NULL;
+	}
+	return T_DESC(task);
+}
 /**
 * Open the device
 * This function is called when the device shall be opened.
@@ -117,39 +135,57 @@ static ssize_t edf_rtdm_read_nrt(struct rtdm_dev_context *context, rtdm_user_inf
 * Write in the device
 * This function is called when the device is written (non-realtime).
 * NOTE: only EDFMessage are interpreted by this routine, a negative value wille be
-* returned in case of error.
+* returned
 */
 static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_info_t * user_info, const void *buf, size_t nbyte)
 {
 	EDFMessage * message;
+	RT_TASK * task;
 	rtdm_lockctx_t lock_ctx;
 	int status;
-	
-	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@write] message received\n");
-	#endif
+	//RT_TASK * rt_curr;
+	//xnthread_t * curr;
+
 	//if (nbyte!=sizeof(EDFMessage))
 	//      return -1; /* You should talk to EDF-SCHED with EDFMessages */
 	
 	message = (EDFMessage*) rtdm_malloc(sizeof(EDFMessage));
 	if ( rtdm_copy_from_user( user_info, message, buf, sizeof(EDFMessage) ) == EFAULT ){
 		rtdm_free(message);
-		return EFAULT;}
+		return -EFAULT;
+	}
+	#ifdef DEBUG
+	rtdm_printk("Edfomai: [@write] message received (%s)\n",(char*) &(message->task));
+	#endif	
+	//curr = (xnthread_t*) rtdm_task_current();
+	//rt_curr=T_DESC(curr);
+	//rtdm_printk("Edfomai: [@write] current task (%s)(%s)\n",curr->name,rt_curr->rname);
+	task = _get_handle(message->task);
+	if (task==NULL){
+		rtdm_free(message);
+		return -1;
+	}
+	#ifdef DEBUG
+	rtdm_printk("Edfomai: [@write] serving request for task (%s)\n",task->rname);
+	#endif	
 	
 	switch (message->command)
 	{
 	      case CREATE_TASK:
-	             status=_mtx_acquire();
-	             if (status){
+			#ifdef DEBUG
+	      		rtdm_printk("Edfomai: [@write] task creation (%s)\n",task->rname);
+			#endif
+	             	status=_mtx_acquire();
+	             	if (status){
 				rtdm_free(message);
 				return status;
-	              }
-		      rtdm_lock_irqsave(lock_ctx);
-	              status=rt_dtask_create ( &(message->task) , message->deadline );
-		      rtdm_lock_irqrestore(lock_ctx);
+	              	}
+		      	rtdm_lock_irqsave(lock_ctx);
+	              	status=0;//rt_dtask_create ( task , message->deadline );
+		      	rtdm_lock_irqrestore(lock_ctx);
 	        	if (status){
 				#ifdef DEBUG
-				rtdm_printk("Edfomai: [@write] task created\n");
+				rtdm_printk("Edfomai: [@write] problem during task creation\n");
 				#endif
 			}      
 		/*
@@ -158,17 +194,17 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      	* must be provided during the rt_task_start.
 	      	* We haven't it here.
 	      	*/
-	              status=_mtx_release();
-	              if (status){
+	              	status=_mtx_release();
+	              	if (status){
 				rtdm_free(message);
 				return status;
-	              }
+	              	}
 	
 	      break; 
 	      case START_TASK:
-		#ifdef DEBUG
-	      	rtdm_printk("Edfomai: [@write] task start\n");
-		#endif
+			#ifdef DEBUG
+	      		rtdm_printk("Edfomai: [@write] task start (%s)\n",task->rname);
+			#endif
 	      	/* 
 	      	* We only set the task deadline. 
 	      	* If you want to use this functionality properly you should
@@ -176,72 +212,72 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      	* then set the actual deadline using this command. 
 	      	* This way task deadline will not be considered (more or less:).
 	      	*/
-	      	status=_mtx_acquire();
-	      	if (status){
-	      		rtdm_free(message);
-			return status;
-	      	}
-		rtdm_lock_irqsave(lock_ctx);
-	      	status=rt_dtask_setdeadline ( &(message->task) , message->deadline );
-		rtdm_lock_irqrestore(lock_ctx);
-                if (status){
-                        #ifdef DEBUG
-                        rtdm_printk("Edfomai: [@write] task created\n");
-                        #endif
-                }
+	      		status=_mtx_acquire();
+	      		if (status){
+	      			rtdm_free(message);
+				return status;
+	      		}
+			rtdm_lock_irqsave(lock_ctx);
+	      		status=rt_dtask_setdeadline ( task , message->deadline );
+			rtdm_lock_irqrestore(lock_ctx);
+                	if (status){
+                        	#ifdef DEBUG
+                       		rtdm_printk("Edfomai: [@write] problems during task start\n");
+                        	#endif
+                	}
 
-		status=_mtx_release();
-	        if (status){
-	              	rtdm_free(message);  
-		    	return status;
-                }
+			status=_mtx_release();
+	      		if (status){
+	              		rtdm_free(message);  
+		    		return status;
+              		}
 	      break;		
 	      case RESET_DEADLINE:
-		#ifdef DEBUG
-	      	rtdm_printk("Edfomai: [@write] task reset deadline\n");
-	      	#endif
-		status=_mtx_acquire();
-	      	if (status){
-	      		rtdm_free(message);
-			return status;
-	      	} 
-	       rtdm_lock_irqsave(lock_ctx);
-	       status=rt_dtask_resetdeadline ( &(message->task) );
-	       rtdm_lock_irqrestore(lock_ctx);
-               if (status){
-                        #ifdef DEBUG
-                        rtdm_printk("Edfomai: [@write] task created\n");
-                        #endif
-               }
-	       status=_mtx_release();
-	       if (status){
-	               	rtdm_free(message);
-	         	return status;
-	       }
+			#ifdef DEBUG
+	      		rtdm_printk("Edfomai: [@write] task reset deadline (%s)\n",task->rname);
+	      		#endif
+			status=_mtx_acquire();
+	      		if (status){
+	      			rtdm_free(message);
+				return status;
+	      		} 
+	      		rtdm_lock_irqsave(lock_ctx);
+	       		status=rt_dtask_resetdeadline(task);
+	       		rtdm_lock_irqrestore(lock_ctx);
+               		if (status){
+                        	#ifdef DEBUG
+                        	rtdm_printk("Edfomai: [@write] problems during deadline reset\n");
+                        	#endif
+               		}
+	       		status=_mtx_release();
+			if (status){
+	               		rtdm_free(message);
+	         		return status;
+			}
 	      break;
               case SET_DEADLINE:
-		#ifdef DEBUG
-	      	rtdm_printk("Edfomai: [@write] task set deadline\n");
-		#endif
-                status=_mtx_acquire();
-                if (status){
-                        rtdm_free(message);
-			return status;
-                }
-		      rtdm_lock_irqsave(lock_ctx);
-                      status=rt_dtask_setdeadline ( &(message->task) , message->deadline);
-		      rtdm_lock_irqrestore(lock_ctx);
-               		if (status){
-               	        	 #ifdef DEBUG
-               	         	rtdm_printk("Edfomai: [@write] task created\n");
+			#ifdef DEBUG
+			rtdm_printk("Edfomai: [@write] task set deadline (%s)\n", task->rname);
+			#endif
+			status=_mtx_acquire();
+			if (status){
+                        	rtdm_free(message);
+				return status;
+                	}
+			rtdm_lock_irqsave(lock_ctx);
+			status=rt_dtask_setdeadline(task, message->deadline);
+			rtdm_lock_irqrestore(lock_ctx);
+			if (status){
+               	        	#ifdef DEBUG
+               	         	rtdm_printk("Edfomai: [@write] problems during deadline set\n");
                	         	#endif
-        	       }
+			}
 	
-                      status=_mtx_release();
-                      if (status){
+			status=_mtx_release();
+			if (status){
                               	rtdm_free(message);
 				return status;
-                      }
+			}
               break;
 	    default:
 	        #ifdef DEBUG
@@ -283,27 +319,12 @@ static struct rtdm_device device = {
 */
 void edf_startswitch_hook( void * cookie )
 {
-	/*int status;
-	status=rt_mutex_acquire(&edf_data_mutex, TM_INFINITE);
-	if (-status== EWOULDBLOCK){
-		rtdm_printk("Edfomai: [@start/switch] mutex (%s) is busy. status (%d)\n", DMUTEX_NAME, status);
-		return;
-	}
-	if (status){
-		rtdm_printk("Edfomai: [@start/switch] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
-		return;
-	}*/
+        RT_TASK * task;
+        task=T_DESC(cookie);
 	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@start/switch] task started or switched\n");
+	rtdm_printk("Edfomai: [@start/switch] task started or switched (%s)\n",task->rname);
 	#endif
-	//rtdm_lock_get(&edf_data_lock);
 	rt_dtask_recalculateprio();
-	//rtdm_lock_put(&edf_data_lock);
-	/*status=0;rtdm_mutex_unlock(&edf_data_mutex);
-	if (status){
-		rtdm_printk("Edfomai: [@start/switch] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
-		return;
-	}*/
 }
 /*
 * DELETE Task callback 
@@ -311,30 +332,13 @@ void edf_startswitch_hook( void * cookie )
 */
 void edf_delete_hook( void * cookie )
 {
-	//int status;
 	RT_TASK * task;
-	task = T_DESC(cookie);
-	/*status=rtdm_mutex_timedlock(&edf_data_mutex, RTDM_TIMEOUT_NONE, NULL);
-	if (-status== EWOULDBLOCK){
-		rtdm_printk("Edfomai: [@delete] mutex (%s) is busy. status (%d)\n", DMUTEX_NAME, status);
-		return;
-	}
-	if (status){
-		rtdm_printk("Edfomai: [@delete] mutex (%s) acquire failed with status (%d)\n", DMUTEX_NAME, status);
-		return;
-	}*/
+	task=T_DESC(cookie);
 	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@delete] task deleted\n");
+	rtdm_printk("Edfomai: [@delete] task deleted (%s)\n",task->rname);
 	#endif
-	//rtdm_lock_get(&edf_data_lock);
 	rt_dtask_delete(task);
 	rt_dtask_recalculateprio();
-	//rtdm_lock_get(&edf_data_lock);
-	/*status=0;rtdm_mutex_unlock(&edf_data_mutex);
-	if (status){
-		rtdm_printk("Edfomai: [@delete] mutex (%s) release failed with status (%d)\n", DMUTEX_NAME, status);
-		return;
-	}*/
 }
 /**
 * This function is called when the module is loaded.
@@ -350,7 +354,6 @@ int __init edf_rtdm_init(void)
 		if (res!=0){
 			rtdm_printk("Edfomai: [@init] data structure initialization failed.\n");
 		}
-		//rt_lock_init(&edf_data_lock);
 		res=_mtx_create();
                 if (res!=0){
                         rtdm_printk("Edfomai: [@init] mutex (%s) creation failed with status (%d).\n",DMUTEX_NAME,res);
@@ -399,10 +402,7 @@ void __exit edf_rtdm_exit(void)
 	rt_task_remove_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
 	rt_task_remove_hook(T_HOOK_DELETE, &edf_delete_hook);  
 	//_mtx_acquire();
-	//rtdm_lock_get(&edf_data_lock);
 	rt_dtask_dispose();
-	//rtdm_lock_put(&edf_data_lock);
-	//rtdm_mutex_unlock(&edf_data_mutex);
 	_mtx_delete();
 	rtdm_dev_unregister(&device, 1000);
 	rtdm_printk("Edfomai: [@exit] removal complete\n");

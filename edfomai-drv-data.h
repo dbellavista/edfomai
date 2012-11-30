@@ -24,7 +24,7 @@ typedef struct rt_deadline_task {
 	unsigned long deadline;
 	unsigned long remain;
 	unsigned long relative_deadline;
-	RT_TASK task;
+	RT_TASK * task;
 	RT_TASK_INFO task_info;
 } RT_DEADLINE_TASK;
 

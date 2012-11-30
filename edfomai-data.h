@@ -7,7 +7,7 @@
 #include <native/task.h>
 #endif
 
-
+#define TNAME_LEN 24
 #define DEADLINENOTSET -1
 
 /*
@@ -24,7 +24,7 @@ typedef enum EDFCommand {
 */
 typedef struct EDFMessage {
 	EDFCommand command;
-	RT_TASK task;
+	char task [TNAME_LEN+1];
 	unsigned long deadline;
 } EDFMessage;
 

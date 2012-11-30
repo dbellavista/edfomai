@@ -32,18 +32,18 @@ int init_edfomai() {
 	ret=rt_mutex_create( &edfomai_mutex , EDFOMAI_MTXNAME );
 
 	if (-ret==ENOMEM){
-                printf("ERROR : not enought memory (%s)\n" , strerror(-ret) );
+                printf("Edfomai: not enought memory (%s)\n" , strerror(-ret) );
                 return ret;
         }
         if (-ret==EPERM){
-                printf("ERROR : task cant create mutex in this context (%s)\n" , strerror(-ret) );
+                printf("Edfomai: task cant create mutex in this context (%s)\n" , strerror(-ret) );
                 return ret;
         }
 	// EEXIST and 0 are welcome ..
 	device=rt_dev_open(DEVICE_NAME, 0);
 
 	if (device < 0) {
-		printf("ERROR : can't open device %s (%s)\n", DEVICE_NAME, 
+		printf("Edfomai: can't open device %s (%s)\n", DEVICE_NAME, 
 			strerror(-device));
 		return -1;
     	}
@@ -57,7 +57,7 @@ int dispose_edfomai(){
 	ret = _mtx_acquire(TM_INFINITE);
 
 	if ( ret!=0 || device == -1){
-		printf("ERROR : edfomai may not be initialized. You cant dispose it yet!\n");
+		printf("Edfomai: edfomai may not be initialized. You cant dispose it yet!\n");
 		return -1;
 	}
 
@@ -65,7 +65,7 @@ int dispose_edfomai(){
 	ret=rt_dev_close(device);
 
 	if (ret < 0){
-      		printf("ERROR : can't close device %s (%s)\n", 
+      		printf("Edfomai: can't close device %s (%s)\n", 
 			DEVICE_NAME, strerror(-ret));
       		return 1;
     	}
@@ -80,7 +80,7 @@ int _mtx_acquire( RTIME timeout ){
 	ret=rt_mutex_acquire( &edfomai_mutex, timeout);
 
         if (-ret==EINVAL){
-                printf("ERROR : not a valid mutex (%s)\n" , strerror(-ret) );
+                printf("Edfomai: not a valid mutex (%s)\n" , strerror(-ret) );
         }
         if (-ret==EWOULDBLOCK){
                 printf("WARNING : mutex locked by someone else (%s)\n" , strerror(-ret) );
@@ -89,7 +89,7 @@ int _mtx_acquire( RTIME timeout ){
                 printf("WARNING : mutex acquire timed out (%s)\n" , strerror(-ret) );
         }
         if (-ret==EPERM){
-                printf("ERROR : cant acquire mutex in this context (%s)\n",strerror(-ret) );
+                printf("Edfomai: cant acquire mutex in this context (%s)\n",strerror(-ret) );
         }
         if (-ret==EINTR){
                 printf("WARNING : someone has interrupted the waiting (%s)\n",strerror(-ret));
@@ -104,13 +104,13 @@ int _mtx_release(){
 	ret=rt_mutex_release( &edfomai_mutex);
 
         if (-ret==EINVAL){
-                printf("ERROR : not a valid mutex (%s)\n" , strerror(-ret) );
+                printf("Edfomai: not a valid mutex (%s)\n" , strerror(-ret) );
         }
         if (-ret==EIDRM){
-                printf("ERROR : mutex descriptor in use has been deleted (%s)\n" , strerror(-ret) );
+                printf("Edfomai: mutex descriptor in use has been deleted (%s)\n" , strerror(-ret) );
         }
         if (-ret==EPERM){
-                printf("ERROR : cant acquire mutex in this context (%s)\n",strerror(-ret) );
+                printf("Edfomai: cant acquire mutex in this context (%s)\n",strerror(-ret) );
         }
 	return ret;
 }
@@ -122,16 +122,16 @@ int _wait_period( unsigned long * overruns_r ){
 	ret = rt_task_wait_period( overruns_r );
 
 	if (-ret==EWOULDBLOCK){
-		printf("ERROR : task is not periodic (%s)\n" , strerror(-ret) );
+		printf("Edfomai: task is not periodic (%s)\n" , strerror(-ret) );
 	}
         if (-ret==EINTR){
-                printf("ERROR : task has been interrupted (%s)\n" , strerror(-ret) );
+                printf("Edfomai: task has been interrupted (%s)\n" , strerror(-ret) );
         }
         if (-ret==ETIMEDOUT){
-                printf("ERROR : task has waited too long (%s)\n" , strerror(-ret) );
+                printf("Edfomai: task has waited too long (%s)\n" , strerror(-ret) );
         }
         if (-ret==EPERM){
-                printf("ERROR : task cant sleep in this context (%s)\n" , strerror(-ret) );
+                printf("Edfomai: task cant sleep in this context (%s)\n" , strerror(-ret) );
         }
 	return ret;
 }
@@ -143,29 +143,41 @@ int _wait_period( unsigned long * overruns_r ){
 */
 int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(void *arg), void * arg ){
 	int ret;
-	EDFMessage message;
+	EDFMessage * message = (EDFMessage*) malloc(sizeof(EDFMessage));
+	RT_TASK_INFO task_info;
+	 
+        ret=rt_task_inquire(task, &task_info);
+        if (ret){
+                printf("Edfomai: cant retrieve task info for specified task\n");
+                free(message);
+                return -1;
+        }
 
-	message.command = CREATE_TASK;
-	message.deadline = deadline;
-	ret = (int) memcpy( &(message.task), task, sizeof(RT_TASK) );	 
-	if ( ret != (int) &(message.task)){
-		printf("ERROR : something wrong with memcpy (%s)\n", strerror(-ret) );
+	message->command = CREATE_TASK;
+	message->deadline = deadline;
+	ret=(int) strncpy( (char*)&(message->task), (char*)&(task_info.name), TNAME_LEN );
+	message->task[TNAME_LEN]=0; // null terminate the string 
+	if ( ret != (int) &(message->task)){
+		printf("Edfomai: something wrong during a copy (%s)\n", strerror(-ret) );
+		free(message);
 		return -1;
 	}
-
+	
 	ret=_mtx_acquire( TM_INFINITE );	
 	if ( ret!= 0 || device == -1 ){
-		printf("ERROR : you should init edfomai first\n");
+		printf("Edfomai: you should init edfomai first\n");
+		free(message);
 		return -1;
 	}
 	else{	
-		ret=rt_dev_write( device, (const void * ) &message,  sizeof(EDFMessage) );
+		ret=rt_dev_write(device, (const void *) message, sizeof(EDFMessage));
 		ret=0;
 	}
 	_mtx_release();
 
 	ret=rt_task_start(task, procedure, arg);
 
+	free(message);
 	return ret;
 }
 /*
@@ -174,42 +186,56 @@ int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(voi
 */
 int edf_task_wait_period( unsigned long * overruns_r ){
 	int ret, ret1;
-	EDFMessage message;
+	EDFMessage * message = (EDFMessage*) malloc(sizeof(EDFMessage));
 	RT_TASK * currtask;
+	RT_TASK_INFO task_info;
 
-	message.command=RESET_DEADLINE;
-	message.deadline=DEADLINENOTSET;
+	message->command=RESET_DEADLINE;
+	message->deadline=DEADLINENOTSET;
 	currtask = rt_task_self();
 	if (currtask == NULL){
-		printf("ERROR : cant retrieve RT_TASK descriptor, are we in asynch context??\n");
+		printf("Edfomai: cant retrieve RT_TASK descriptor, are we in asynch context??\n");
+		free(message);
 		return -1;
 	}
-	ret = (int) memcpy( &(message.task), currtask, sizeof(RT_TASK) );
-        if ( ret != (int) &(message.task)){
-                printf("ERROR : something wrong with memcpy (%s)\n",strerror(-ret) );
-                return -1;
+	ret=rt_task_inquire(currtask, &task_info);
+	if (ret){
+		printf("Edfomai: cant retrieve task info for current task\n");
+		free(message);
+		return -1;
+	}	
+
+	ret = (int) strncpy( (char*) &(message->task), (char*)&(task_info.name), TNAME_LEN );
+	message->task[TNAME_LEN]=0;
+        if ( ret != (int) &(message->task)){
+                printf("Edfomai: something wrong with memcpy (%s)\n",strerror(-ret) );
+                free(message);
+		return -1;
         }
 	
 	ret = _wait_period(overruns_r);
-	if (ret != 0)
+	if (ret){
+		free(message);
 		return -1;
-
-
+	}
 	ret = _mtx_acquire( TM_INFINITE );
-	if (ret != 0)
+	if (ret){
+		free(message);
 		return -1;
-
+	}
  	if (device == -1 ){
-                printf("ERROR : you should init edfomai first\n");
+                printf("Edfomai: you should init edfomai first\n");
 		ret1=-1;
         }
 	else{
         	ret1=rt_dev_write( device,(const void * ) &message, sizeof(EDFMessage) );
 	}
 	ret = _mtx_release();
-	if (ret!=0 || ret1!=0)
-		return -1;
-	return 0;
+	if (ret || ret1)
+		ret=-1;
+	else
+		ret=0;
+	free(message);
+	return ret;
 }
-
 
