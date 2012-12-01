@@ -5,7 +5,7 @@
 #include "edfomai-drv-data.h"
 
 //#define DEBUG
-
+#define EDF_SVC_NAME "edf-service"
 #define DEVICE_NAME "edfomai"
 #define SOME_SUB_CLASS 4711
 #define POLL_DELAY 1000
@@ -22,7 +22,8 @@ typedef struct context_s{
 * Access to edf data structures and services must be coordinated through this Spin Lock
 */
 static rtdm_lock_t edf_data_lock;
-//static RT_MUTEX edf_data_mutex;
+static rtdm_event_t edf_event;
+static rtdm_task_t edf_svc;
 
 /*
 * 
@@ -79,19 +80,36 @@ static RT_TASK * _get_handle( char * rname ){
 	int status=0;
 	xnthread_t * task;
 	xnhandle_t handle; // pointer to a xnobject_t
-	//RT_TASK * rtask=NULL;
-	//status= rt_task_bind(rtask,rname,TM_NONBLOCK);
 	status=xnregistry_bind(rname, XN_NONBLOCK, XN_RELATIVE , &handle );
         if (status){
               rtdm_printk("Edfomai: [@get_handle] cant obtain (%s) handle from registry (%d)\n", rname,status);
               return NULL;
-         }
+        }
 	task=xnregistry_fetch(handle);
 	if (task==NULL){
 		rtdm_printk("Edfomai: [@get_handle] cant fetch obtained handle (%s)\n",rname);
 		return NULL;
 	}
 	return T_DESC(task);
+}
+/*
+* Edfomai priority recalculation service procedure
+*/
+void _edf_service(void *arg){
+	//rtdm_lockctx_t lock_ctx;
+	#ifdef DEBUG
+	rtdm_printk("Edfomai: [@svc] edf service started\n");
+	#endif
+	for(;;){
+		rtdm_event_wait(&edf_event);
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@svc] recalculating priorities\n");
+		#endif
+	        //rtdm_lock_irqsave(lock_ctx);
+		rt_dtask_recalculateprio();
+		//rtdm_lock_irqrestore(lock_ctx);
+		rtdm_event_clear(&edf_event);
+	}
 }
 /**
 * Open the device
@@ -127,7 +145,7 @@ static ssize_t edf_rtdm_read_nrt(struct rtdm_dev_context *context, rtdm_user_inf
         #ifdef DEBUG
         rtdm_printk("Edfomai: [@read] device is read\n");
   	#endif
-  	// TODO: copy to user some kind of useful information for monitoring purposes..
+  	// TODO: copy to user some useful information?
 	return -1;
 }
 
@@ -181,7 +199,7 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 				return status;
 	              	}
 		      	rtdm_lock_irqsave(lock_ctx);
-	              	status=0;//rt_dtask_create ( task , message->deadline );
+	              	status=rt_dtask_create ( task , message->deadline );
 		      	rtdm_lock_irqrestore(lock_ctx);
 	        	if (status){
 				#ifdef DEBUG
@@ -323,8 +341,10 @@ void edf_startswitch_hook( void * cookie )
         task=T_DESC(cookie);
 	#ifdef DEBUG
 	rtdm_printk("Edfomai: [@start/switch] task started or switched (%s)\n",task->rname);
+	// rt_task_set_priority(task, 12); It locks the kernel (I think it call handlers again)
 	#endif
-	rt_dtask_recalculateprio();
+	rtdm_event_signal(&edf_event);  
+	//rt_dtask_recalculateprio();
 }
 /*
 * DELETE Task callback 
@@ -338,7 +358,8 @@ void edf_delete_hook( void * cookie )
 	rtdm_printk("Edfomai: [@delete] task deleted (%s)\n",task->rname);
 	#endif
 	rt_dtask_delete(task);
-	rt_dtask_recalculateprio();
+	rtdm_event_signal(&edf_event);
+	//rt_dtask_recalculateprio();
 }
 /**
 * This function is called when the module is loaded.
@@ -358,6 +379,11 @@ int __init edf_rtdm_init(void)
                 if (res!=0){
                         rtdm_printk("Edfomai: [@init] mutex (%s) creation failed with status (%d).\n",DMUTEX_NAME,res);
                 }
+		rtdm_event_init(&edf_event,0);
+		rtdm_task_init(&edf_svc, EDF_SVC_NAME,
+				 &_edf_service, NULL,
+				 RTDM_TASK_HIGHEST_PRIORITY, 0/*period*/);
+		
 		res=rt_task_add_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
                 if (res!=0){
                         rtdm_printk("Edfomai: [@init] start/switch hook failed registration with status (%d).\n",res);
@@ -402,6 +428,8 @@ void __exit edf_rtdm_exit(void)
 	rt_task_remove_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
 	rt_task_remove_hook(T_HOOK_DELETE, &edf_delete_hook);  
 	//_mtx_acquire();
+	rtdm_task_destroy (&edf_svc);
+	rtdm_event_destroy(&edf_event);
 	rt_dtask_dispose();
 	_mtx_delete();
 	rtdm_dev_unregister(&device, 1000);
