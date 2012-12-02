@@ -1,0 +1,27 @@
+CFLAGS += $(shell xeno-config --skin=native --cflags)
+LDFLAGS += $(shell xeno-config --skin=native --ldflags)
+LDFLAGS += -lrtdk
+LDFLAGS += -lrtdm
+
+EXTRA_CFLAGS += -DDEBUG 
+
+all : edfomai-app.o sporadic_test periodic_test
+
+sporadic_test : edfomai-app.o sporadic_test.o
+	$(CC) sporadic_test.o edfomai-app.o $(LDFLAGS) -o sporadic_test
+
+sporadic_test.o : sporadic_test.c
+	$(CC) -c $(CFLAGS) sporadic_test.c
+
+periodic_test : edfomai-app.o periodic_test.o
+	$(CC) periodic_test.o edfomai-app.o $(LDFLAGS) -o periodic_test
+
+periodic_test.o : periodic_test.c
+	$(CC) -c $(CFLAGS) periodic_test.c
+
+edfomai-app.o : edfomai-app.c
+	$(CC) -c $(CFLAGS) edfomai-app.c
+
+clean :
+	rm -f edfomai-app.o sporadic_test.o periodic_test.o sporadic_test periodic_test
+
