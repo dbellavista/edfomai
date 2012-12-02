@@ -9,7 +9,7 @@
 
 #include "datastructures/uthash.h"
 
-#define MAXPRIO 98 //RTDM_TASK_HIGHEST_PRIORITY
+#define MAXPRIO 50 //RTDM_TASK_HIGHEST_PRIORITY
 #define MINPRIO 0  //RTDM_TASK_LOWER_PRIORITY
 
 /* 
@@ -60,14 +60,14 @@ int rt_dtask_recalculateprio(){
 			max_remain=(rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
 			rt_task_inquire(rtdtask->dtask.task,&task_info);
 			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@recalcprio] task(%s) remain(%lu) tasks\n",
-					rtdtask->dtask.task->rname,rtdtask->dtask.remain);
+			//rtdm_printk("Edfomai: [@recalcprio] task(%s) remain(%lu) tasks\n",
+			//		rtdtask->dtask.task->rname,rtdtask->dtask.remain);
 			#endif
 			rt_task_inquire(rtdtask->dtask.task, &(rtdtask->dtask.task_info));
 		}
 	}
 	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@recalcprio] recalculating priorities. minR=(%lu) maxR=(%lu)\n", min_remain,max_remain);
+	//rtdm_printk("Edfomai: [@recalcprio] recalculating priorities. minR=(%lu) maxR=(%lu)\n", min_remain,max_remain);
 	#endif
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 	        newprio=_calculate_prio(rtdtask->dtask.remain, min_remain, max_remain );
@@ -109,11 +109,12 @@ int rt_dtask_resetdeadline( RT_TASK * task){
 	int ret=-1;
 	RT_DTASK * rtdtask;
 	RT_TASK_INFO * task_info = (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
-	rt_task_inquire( task , task_info );
+	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
         	#ifdef DEBUG
-        	rtdm_printk("Edfomai: [@resetdeadline] resetting deadline of task %s\n",task_info->name);
+        	rtdm_printk("Edfomai: [@resetdeadline] resetting deadline of task %s\n",
+				task_info->name);
         	#endif
 		rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.remain=rtdtask->dtask.relative_deadline;
@@ -177,8 +178,8 @@ int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
         	#ifdef DEBUG
         	rtdm_printk("Edfomai: [@dt_create] creating dtask (%s) with deadline %lu\n",
 				rtdtask->dtask.task_info.name, deadline);
-                rtdm_printk("Edfomai: [@dt_create] dtask rname(%s)\n",
-				rtdtask->dtask.task->rname);
+                //rtdm_printk("Edfomai: [@dt_create] dtask rname(%s)\n",
+		//		rtdtask->dtask.task->rname);
         	#endif
 		HASH_ADD_STR( dtask_map, dtask.task_info.name , rtdtask);
 	}else{

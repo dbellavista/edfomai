@@ -4,11 +4,11 @@
 /*
 * Initialize EDFOMAI resources - (NOT THREAD SAFE)
 */
-int init_edfomai();
+int edf_init();
 /*
 * Shutdown and destroy all resources associated to EDFOMAI
 */
-int dispose_edfomai();
+int edf_dispose();
 /*
 * Start an RT_TASK with deadline
 * Deadline is relative and might be interpreted as the maximum task duration permitted.
@@ -23,6 +23,6 @@ int edf_task_start( RT_TASK * task, unsigned long deadline, void (*procedure)(vo
 * Wait a period (for periodic tasks only!)
 * Then deadline will be resetted to starting specified value.
 */
-int edf_task_wait_period( unsigned long * overruns_r );
+int edf_task_wait_period( unsigned long * overruns );
 
 

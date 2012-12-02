@@ -97,6 +97,7 @@ static RT_TASK * _get_handle( char * rname ){
 */
 void _edf_service(void *arg){
 	//rtdm_lockctx_t lock_ctx;
+	int ret;
 	#ifdef DEBUG
 	rtdm_printk("Edfomai: [@svc] edf service started\n");
 	#endif
@@ -106,7 +107,10 @@ void _edf_service(void *arg){
 		rtdm_printk("Edfomai: [@svc] recalculating priorities\n");
 		#endif
 	        //rtdm_lock_irqsave(lock_ctx);
+		ret=_mtx_acquire();
+		if (ret) continue;
 		rt_dtask_recalculateprio();
+		ret=_mtx_release();
 		//rtdm_lock_irqrestore(lock_ctx);
 		rtdm_event_clear(&edf_event);
 	}
@@ -159,7 +163,7 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 {
 	EDFMessage * message;
 	RT_TASK * task;
-	rtdm_lockctx_t lock_ctx;
+	//rtdm_lockctx_t lock_ctx;
 	int status;
 	//RT_TASK * rt_curr;
 	//xnthread_t * curr;
@@ -173,7 +177,7 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 		return -EFAULT;
 	}
 	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@write] message received (%s)\n",(char*) &(message->task));
+	//rtdm_printk("Edfomai: [@write] message received (%s)\n",(char*) &(message->task));
 	#endif	
 	//curr = (xnthread_t*) rtdm_task_current();
 	//rt_curr=T_DESC(curr);
@@ -198,9 +202,9 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 				rtdm_free(message);
 				return status;
 	              	}
-		      	rtdm_lock_irqsave(lock_ctx);
+		      	//rtdm_lock_irqsave(lock_ctx);
 	              	status=rt_dtask_create ( task , message->deadline );
-		      	rtdm_lock_irqrestore(lock_ctx);
+		      	//rtdm_lock_irqrestore(lock_ctx);
 	        	if (status){
 				#ifdef DEBUG
 				rtdm_printk("Edfomai: [@write] problem during task creation\n");
@@ -235,9 +239,9 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      			rtdm_free(message);
 				return status;
 	      		}
-			rtdm_lock_irqsave(lock_ctx);
+			//rtdm_lock_irqsave(lock_ctx);
 	      		status=rt_dtask_setdeadline ( task , message->deadline );
-			rtdm_lock_irqrestore(lock_ctx);
+			//rtdm_lock_irqrestore(lock_ctx);
                 	if (status){
                         	#ifdef DEBUG
                        		rtdm_printk("Edfomai: [@write] problems during task start\n");
@@ -259,9 +263,9 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 	      			rtdm_free(message);
 				return status;
 	      		} 
-	      		rtdm_lock_irqsave(lock_ctx);
+	      		//rtdm_lock_irqsave(lock_ctx);
 	       		status=rt_dtask_resetdeadline(task);
-	       		rtdm_lock_irqrestore(lock_ctx);
+	       		//rtdm_lock_irqrestore(lock_ctx);
                		if (status){
                         	#ifdef DEBUG
                         	rtdm_printk("Edfomai: [@write] problems during deadline reset\n");
@@ -282,9 +286,9 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
                         	rtdm_free(message);
 				return status;
                 	}
-			rtdm_lock_irqsave(lock_ctx);
+			//rtdm_lock_irqsave(lock_ctx);
 			status=rt_dtask_setdeadline(task, message->deadline);
-			rtdm_lock_irqrestore(lock_ctx);
+			//rtdm_lock_irqrestore(lock_ctx);
 			if (status){
                	        	#ifdef DEBUG
                	         	rtdm_printk("Edfomai: [@write] problems during deadline set\n");
