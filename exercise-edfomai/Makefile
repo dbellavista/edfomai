@@ -2,28 +2,18 @@ CFLAGS += $(shell xeno-config --skin=native --cflags)
 LDFLAGS += $(shell xeno-config --skin=native --ldflags)
 LDFLAGS += -lrtdk
 
-all: multitask semaphore test test_b
+all: mars_rover example1
 
-multitask: multitask.o
-	$(CC) multitask.o $(LDFLAGS) -o multitask
-multitask.o: multitask.c
-	$(CC) -c $(CFLAGS) multitask.c
+mars_rover: mars_rover.o
+	$(CC) mars_rover.o $(LDFLAGS) -o mars_rover
+mars_rover.o: mars_rover.c
+	$(CC) -c $(CFLAGS) mars_rover.c
 
-semaphore: semaphore.o
-	$(CC) semaphore.o $(LDFLAGS) -o semaphore
-semaphore.o: semaphore.c
-	$(CC) -c $(CFLAGS) semaphore.c
-
-test: test.o
-	$(CC) test.o $(LDFLAGS) -o test
-test.o: test.c
-	$(CC) -c $(CFLAGS) test.c
-
-test_b: test_b.o
-	$(CC) test_b.o $(LDFLAGS) -o test_b
-test_b.o: test_b.c
-	$(CC) -c $(CFLAGS) test_b.c
+example1: example1.o
+	$(CC) example1.o $(LDFLAGS) -o example1
+example1.o: example1.c
+	$(CC) -c $(CFLAGS) example1.c
 
 clean:
-	rm -f *.o multitask semaphore test test_b
+	rm -f *.o mars_rover example1 test test_b
 

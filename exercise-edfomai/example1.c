@@ -7,6 +7,9 @@
 #include <native/timer.h>
 
 #include <rtdk.h>
+
+#include "../edfomai-app.h"
+
 RT_TASK demo_task;
 
 void demo (void *arg){
@@ -24,20 +27,20 @@ void demo (void *arg){
 	//print task name
 	params = (int *)arg;
 	RTIME p = 1e8; // 0.1 secs
-	p*=params[0];
-	rt_task_set_periodic(NULL,TM_NOW,p);
+	//p*=params[0];
+	rt_task_set_periodic(NULL,TM_NOW,params[0]*p);
 	while(1){
 		//for(i=0;i<params[1]*10000;i++)
 		//	if(!(i%1000))
 		//		rt_printf("[%s] %d s, %d\n", curtaskinfo.name,param[0],param[1]);
-		rt_timer_spin(param[1]*1e8);
+		rt_timer_spin(params[1]*p);
 		rt_task_wait_period(NULL);
 	}
 }
 
 int main (int argc, char * argv[]){
-	char str[10];
 	unsigned long periods[3][3];
+	char str[10];
 	int i;
 	rt_print_auto_init(1);
 	mlockall(MCL_CURRENT|MCL_FUTURE);
@@ -56,9 +59,8 @@ int main (int argc, char * argv[]){
 	rt_printf("[Main]:start task\n");
 	for(i=0;i<3;i++){
 		sprintf(str,"Task-%d",i);
-		periods[i]=i+1;
-		rt_task_create(&demo_task,str,10,50,0);
-		edf_task_start(&demo_task,periods[2],&demo,periods[i]);
+		rt_task_create(&demo_task,str,0,50,0);
+		edf_task_start(&demo_task,periods[i][2],&demo,periods[i]);
 	}
 	rt_printf("end program by CTRL-C\n");
 	pause();
