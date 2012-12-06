@@ -1,5 +1,4 @@
 
-
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
@@ -171,7 +170,7 @@ void startup(){
 	edf_task_start(&task, params[2][2]*t, &act, NULL);
 
 	rt_task_create(&task, "comunicator", 0, 87, 0);
-	edf_task_start(&task, 65*t, &act, NULL);
+	edf_task_start(&task, 65*t, &comunicate, NULL);
 }
 
 void init_edfomai() {
