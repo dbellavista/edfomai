@@ -7,6 +7,7 @@
 #else
 #include <stdlib.h>
 #include <native/task.h>
+#include <native/alarm.h>
 #endif
 
 #include "edfomai-data.h"
