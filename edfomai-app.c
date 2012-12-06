@@ -38,7 +38,7 @@ int edf_init() {
 			strerror(-device));
 		device=-1;
 		return -1;
-    	}
+		}
 	return 0;
 }
 /*
@@ -56,24 +56,24 @@ int edf_dispose(){
 	ret=rt_dev_close(device);
 	if (ret){
 		#ifdef DEBUG
-      		rt_printf("Edfomai: can't close device \"%s\" (%s)\n", 
+			rt_printf("Edfomai: can't close device \"%s\" (%s)\n", 
 			DEVICE_NAME, strerror(-ret));
 		#endif
 		device=-1;
-      		return -2;
-    	}
-  	return 0;
+			return -2;
+		}
+	return 0;
 }
 int _mtx_create(){
 	int ret=0;
 	//ret=rt_mutex_create( &edfomai_mutex , EDFOMAI_MTXNAME );
 	if (-ret==ENOMEM){
-                rt_printf("Edfomai: not enought memory (%s)\n" , 
-				strerror(-ret) );
-        }
-        if (-ret==EPERM){
-                rt_printf("Edfomai: task cant create mutex in this context (%s)\n" , strerror(-ret) );	
-        }
+		rt_printf("Edfomai: not enought memory (%s)\n" , 
+		strerror(-ret) );
+	}
+	if (-ret==EPERM){
+		rt_printf("Edfomai: task cant create mutex in this context (%s)\n" , strerror(-ret) );	
+	}
 	return ret;
 }
 int _mtx_delete(){
@@ -87,21 +87,21 @@ int _mtx_delete(){
 int _mtx_acquire(){
 	int ret=0;
 	//ret=rt_mutex_acquire( &edfomai_mutex, TM_INFINITE);
-        if (-ret==EINVAL){
-                rt_printf("Edfomai: not a valid mutex (%s)\n" , strerror(-ret) );
-        }
-        if (-ret==EWOULDBLOCK){
-                rt_printf("Edfomai: mutex locked by someone else (%s)\n" , strerror(-ret) );
-        }
-        if (-ret==ETIMEDOUT){
-                rt_printf("Edfomai: mutex acquire timed out (%s)\n" , strerror(-ret) );
-        }
-        if (-ret==EPERM){
-                rt_printf("Edfomai: cant acquire mutex in this context (%s)\n",strerror(-ret) );
-        }
-        if (-ret==EINTR){
-                rt_printf("Edfomai: someone has interrupted the waiting (%s)\n",strerror(-ret));
-        }
+	if (-ret==EINVAL){
+		rt_printf("Edfomai: not a valid mutex (%s)\n" , strerror(-ret) );
+	}
+	if (-ret==EWOULDBLOCK){
+		rt_printf("Edfomai: mutex locked by someone else (%s)\n" , strerror(-ret) );
+	}
+	if (-ret==ETIMEDOUT){
+		rt_printf("Edfomai: mutex acquire timed out (%s)\n" , strerror(-ret) );
+	}
+	if (-ret==EPERM){
+		rt_printf("Edfomai: cant acquire mutex in this context (%s)\n",strerror(-ret) );
+	}
+	if (-ret==EINTR){
+		rt_printf("Edfomai: someone has interrupted the waiting (%s)\n",strerror(-ret));
+	}
 	
 	return ret;
 }
@@ -109,18 +109,18 @@ int _mtx_acquire(){
 * 
 */
 int _mtx_release(){
-        int ret=0;
+	int ret=0;
 	//ret=rt_mutex_release( &edfomai_mutex);
-
-        if (-ret==EINVAL){
-                rt_printf("Edfomai: not a valid mutex (%s)\n" , strerror(-ret) );
-        }
-        if (-ret==EIDRM){
-                rt_printf("Edfomai: mutex descriptor in use has been deleted (%s)\n" , strerror(-ret) );
-        }
-        if (-ret==EPERM){
-                rt_printf("Edfomai: cant acquire mutex in this context (%s)\n",strerror(-ret) );
-        }
+	
+	if (-ret==EINVAL){
+		rt_printf("Edfomai: not a valid mutex (%s)\n" , strerror(-ret) );
+	}
+	if (-ret==EIDRM){
+		rt_printf("Edfomai: mutex descriptor in use has been deleted (%s)\n" , strerror(-ret) );
+	}
+	if (-ret==EPERM){
+		rt_printf("Edfomai: cant acquire mutex in this context (%s)\n",strerror(-ret) );
+	}
 	
 	return ret;
 }
@@ -134,14 +134,14 @@ int _wait_period(unsigned long * overruns){
 		rt_printf("Edfomai: task is not periodic (%s)\n" , strerror(-ret) );
 		ret=-1;
 	}else if (-ret==EINTR){
-                rt_printf("Edfomai: task has been interrupted (%s)\n" , strerror(-ret) );
+			rt_printf("Edfomai: task has been interrupted (%s)\n" , strerror(-ret) );
 		ret=-1;
-        }else if (-ret==ETIMEDOUT){
-                rt_printf("Edfomai: task has waited too long (%s)\n" , strerror(-ret) );
+		}else if (-ret==ETIMEDOUT){
+			rt_printf("Edfomai: task has waited too long (%s)\n" , strerror(-ret) );
 		ret=-1;
-        }else if (-ret==EPERM){
-                rt_printf("Edfomai: task cant sleep in this context (%s)\n" , strerror(-ret) );
-        }else ret=0;
+		}else if (-ret==EPERM){
+			rt_printf("Edfomai: task cant sleep in this context (%s)\n" , strerror(-ret) );
+		}else ret=0;
 	return ret;
 }
 /*
@@ -154,13 +154,13 @@ int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(voi
 	int ret;
 	EDFMessage * message = (EDFMessage*) malloc(sizeof(EDFMessage));
 	RT_TASK_INFO task_info;
-	 
-        ret=rt_task_inquire(task, &task_info);
-        if (ret){
-                rt_printf("Edfomai: cant retrieve task info for specified task\n");
-                free(message);
-                return -1;
-        }
+	
+	ret=rt_task_inquire(task, &task_info);
+	if (ret){
+		rt_printf("Edfomai: cant retrieve task info for specified task\n");
+		free(message);
+		return -1;
+	}
 
 	message->command = CREATE_TASK;
 	message->deadline = deadline;
@@ -168,7 +168,6 @@ int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(voi
 	message->task[TNAME_LEN]=0; // null terminate the string 
 	if ( ret != (int) &(message->task)){
 		rt_printf("Edfomai: something wrong during a copy (%s)\n", strerror(-ret) );
-		
 		free(message);
 		return -1;
 	}
@@ -180,7 +179,7 @@ int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(voi
 		free(message);
 		return -1;
 	}
-	else{	
+	else{
 		ret=rt_dev_write(device, (const void *) message, sizeof(EDFMessage));
 		ret=0;
 	}
@@ -212,50 +211,39 @@ int edf_task_wait_period(unsigned long * overruns){
 		rt_printf("Edfomai: [@waitperiod] cant retrieve task info for current task\n");
 		free(message);
 		return -1;
-	}	
-	message->command=RESET_DEADLINE;
+	}
+	message->command=STOP_WATCHD;
 	message->deadline=DEADLINENOTSET;
-	ret = (int) strncpy( (char*) &(message->task), (char*)&(task_info.name), 
-		TNAME_LEN );
+	ret = (int) strncpy( (char*) &(message->task), (char*)&(task_info.name), TNAME_LEN );
 	message->task[TNAME_LEN]=0;
-        if ( ret!=(int) &(message->task)){
-                rt_printf("Edfomai: [@waitperiod] something wrong with memcpy (%s)\n",strerror(-ret));
-                free(message);
+	if ( ret!=(int) &(message->task)){
+		rt_printf("Edfomai: [@waitperiod] something wrong with memcpy (%s)\n",strerror(-ret));
+		free(message);
 		return -1;
-        }
+	}
+	ret1=rt_dev_write(device,(const void *) message, sizeof(EDFMessage));
 	#ifdef DEBUG
-	rt_printf("Edfomai: [@waitperiod] task(%s) wait next period\n",
-			task_info.name,ret);
-        //ret1=rt_dev_write(device,(const void *) message, 
-	//		sizeof(EDFMessage));
+	rt_printf("Edfomai: [@waitperiod] task(%s) wait next period\n", task_info.name,ret);
 	#endif
 	ret = _wait_period(overruns);
 	#ifdef DEBUG
-	rt_printf("Edfomai: [@waitperiod] task(%s) awaken ret(%d)\n",
-			task_info.name,ret);
-        //ret1=rt_dev_write(device,(const void *) message, 
-	//	sizeof(EDFMessage));
-	//rt_printf("Edfomai: [@waitperiod] write returns(%d)(%s)\n",ret1,strerror(-ret1));
+	rt_printf("Edfomai: [@waitperiod] task(%s) awaken ret(%d)\n", task_info.name,ret);
 	#endif
-	//if (ret){
-	//	free(message);
-	//	return -1;
-	//}
 	ret=_mtx_acquire();
 	if (ret){
 		free(message);
 		return -1;
 	}
- 	if (device==-1){
-                rt_printf("Edfomai: you should init edfomai first\n");
+	if (device==-1){
+		rt_printf("Edfomai: you should init edfomai first\n");
 		ret1=-1;
-        }
+	}
 	else{
 		#ifdef DEBUG
-                rt_printf("Edfomai: [@waitperiod] sending reset request\n");
+		rt_printf("Edfomai: [@waitperiod] sending reset request\n");
 		#endif
-        	ret1=rt_dev_write(device,(const void *) message, 
-			sizeof(EDFMessage));
+		message->command=RESET_DEADLINE;
+		ret1=rt_dev_write(device,(const void *) message, sizeof(EDFMessage));
 	}
 	ret = _mtx_release();
 	if (ret || ret1)
