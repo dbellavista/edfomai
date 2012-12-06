@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <signal.h>
 #include <unistd.h>
@@ -47,7 +46,7 @@ void sense (void *arg){
 	int i;
 	int res;
 	unsigned long* param;
-	param = params;	// (unsigned long*)arg;
+	param = (unsigned long*)arg;
         RT_TASK *curtask;
         RT_TASK_INFO curtaskinfo;
 
@@ -78,7 +77,7 @@ void process(void *arg){
 	int i;
 	int res;
 	unsigned long* param;
-	param = params;	// (unsigned long*)arg;
+	param = (unsigned long*)arg;
         RT_TASK *curtask;
         RT_TASK_INFO curtaskinfo;
 
@@ -111,7 +110,7 @@ void act(void *arg){
 	int i;
 	int res;
 	unsigned long* param;
-	param = params;	// (unsigned long*)arg;
+	param = (unsigned long*)arg;
         RT_TASK *curtask;
         RT_TASK_INFO curtaskinfo;
 
@@ -161,13 +160,13 @@ void startup(){
 	rt_sem_create(&exLock, "sharedResource", 1, S_PRIO);
 	
 	rt_task_create(&task, "sensor", 0, 90, 0);
-	edf_task_start(&task, params[0][2]*t, &sense, NULL);
+	edf_task_start(&task, params[0][2]*t, &sense, params[0]);
 
 	rt_task_create(&task, "processor", 0, 89, 0);
-	edf_task_start(&task, params[1][2]*t, &process, NULL);
+	edf_task_start(&task, params[1][2]*t, &process, params[1]);
 
 	rt_task_create(&task, "actuator", 0, 88, 0);
-	edf_task_start(&task, params[2][2]*t, &act, NULL);
+	edf_task_start(&task, params[2][2]*t, &act, params[2]);
 
 	rt_task_create(&task, "comunicator", 0, 87, 0);
 	edf_task_start(&task, 65*t, &comunicate, NULL);
@@ -184,7 +183,7 @@ void init_edfomai() {
 	if(edf_init())
 		exit(1);
 
-	// a cosa serve?
+//	// Make the current task an RT_TASK
 //	rt_task_shadow(&spawner, str0,50,T_CPU(0));
 }
 
