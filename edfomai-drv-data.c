@@ -6,6 +6,7 @@
 #endif
 #include <native/timer.h>
 #include <native/task.h>
+#include <native/alarm.h> 
 
 #include "datastructures/uthash.h"
 
