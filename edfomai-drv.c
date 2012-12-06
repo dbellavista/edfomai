@@ -1,6 +1,6 @@
 #include <linux/module.h>
 #include <rtdm/rtdm_driver.h>
-#include <queue.h>
+//#include <queue.h>
 #include "edfomai-data.h"
 #include "edfomai-drv-data.h"
 
