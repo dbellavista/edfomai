@@ -35,7 +35,7 @@ extern void deadline_missed( struct rt_alarm *alarm, void * cookie );
 */
 static inline int _calculate_prio( unsigned long remain, 
 			unsigned long min_remain, unsigned long max_remain){
-	return (unsigned int) MAXPRIO - (unsigned int) ( (remain-min_remain) * (MAXPRIO-MINPRIO) / 
+	return  MAXPRIO - ( (remain-min_remain) * (MAXPRIO-MINPRIO) / 
 		( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain ));
 }
 /*
@@ -59,7 +59,7 @@ int rt_dtask_recalculateprio(){
 
 	curr_time=(unsigned long)rt_timer_read();
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
-		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET && rtdtask->dtask.status==OK ){
+		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET ){
 			rtdtask->dtask.remain=(rtdtask->dtask.deadline > curr_time ?
 							rtdtask->dtask.deadline - curr_time : 0);
 			if (rtdtask->dtask.remain==0)
@@ -68,9 +68,7 @@ int rt_dtask_recalculateprio(){
 			max_remain=(rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
 			rt_task_inquire(rtdtask->dtask.task,&task_info);
 			rt_task_inquire(rtdtask->dtask.task, &(rtdtask->dtask.task_info));
-		}else if (rtdtask->dtask.status==MISSED){
-			missed++;
-		}
+		} 
 	}
 	#ifdef DEBUG
 	rtdm_printk("Edfomai: [@dt_rcalcp] #tasks(%d) #missed(%d)\n",count,missed);
