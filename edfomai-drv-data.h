@@ -18,20 +18,20 @@
 #define DMUTEX_NAME "EDF_DATA_MUTEX"
 
 #define init_dtask( dtask ) { \
-			dtask->deadline=DEADLINENOTSET; \
-			dtask->remain=DEADLINENOTSET; \
-			dtask->relative_deadline=DEADLINENOTSET; \
-			dtask->state=OK; \
-			dtask->task=NULL; \
-			dtask->watchd=(RT_ALARM *)rtdm_malloc(sizeof(RT_ALARM)); \
+			(dtask)->deadline=DEADLINENOTSET; \
+			(dtask)->remain=DEADLINENOTSET; \
+			(dtask)->relative_deadline=DEADLINENOTSET; \
+			(dtask)->status=OK; \
+			(dtask)->task=NULL; \
+			(dtask)->watchd=(RT_ALARM *)rtdm_malloc(sizeof(RT_ALARM)); \
 	}
 #define reset_watchd( dtask ) { \
-			dtask->watchd; \
+			(dtask)->watchd; \
 			;\
 	}
 
 #define clear_dtask( dtask ) { \
-			rtdm_free(dtask->watchd); \
+			rtdm_free((dtask)->watchd); \
 	}
 
 /*
@@ -48,7 +48,7 @@ typedef struct rt_deadline_task {
 	unsigned long deadline;
 	unsigned long remain;
 	unsigned long relative_deadline;
-	DeadlineState state;
+	DeadlineState status;
 	RT_TASK * task;
 	RT_ALARM * watchd;
 	RT_TASK_INFO task_info;

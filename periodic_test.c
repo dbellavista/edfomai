@@ -5,7 +5,6 @@
 
 #include <native/task.h>
 #include <native/timer.h>
-#include <rtdm/rtdm.h>
 #include <rtdk.h>
 
 #include "edfomai-app.h"
@@ -33,7 +32,7 @@ void demo (void *arg){
 	rt_printf("!%s started\n", curtaskinfo.name);
 	for(p=0;p<NPERIODS;p++){
 		for ( i=0 ; i < WASTE_TIME; i+=WAIT_SESSION ){
-			rtdm_task_busy_sleep(WAIT_SESSION)
+			rt_task_sleep(WAIT_SESSION);
 			rt_task_inquire(curtask,&curtaskinfo);
 			rt_printf("->%s @ prio %d\n", curtaskinfo.name, curtaskinfo.cprio);
 		}

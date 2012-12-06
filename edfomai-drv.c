@@ -102,7 +102,7 @@ static RT_TASK * _get_handle( char * rname ){
 * Handler of a deadline missed, in this case cookie is a pointer to the
 * RT_TASK who has missed its deadline.
 */
-void deadline_missed( void * cookie ){
+void deadline_missed( struct rt_alarm *alarm, void * cookie ){
 	RT_TASK * t = (RT_TASK*) cookie;
 	int i=TNAME_LEN+1;
 	char message [TNAME_LEN];

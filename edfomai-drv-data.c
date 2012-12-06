@@ -28,7 +28,7 @@ static RT_DTASK * dtask_map = NULL;
 * Anyone who wants to use this edfomai data structures should define a procedure
 * having the signature above
 */
-extern void deadline_missed( void * cookie );
+extern void deadline_missed( struct rt_alarm *alarm, void * cookie );
 
 /*
 * Returns the priority associated with the remaining time 
