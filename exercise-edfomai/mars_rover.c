@@ -36,7 +36,7 @@ void comunicate(void *arg){
 		rt_printf("[comunicator] sending: %d\n",res);
 		rt_timer_spin(6*t);
 		rt_printf("[comunicator] sent: %d\n",res);
-		rt_task_wait_period(NULL);
+		edf_task_wait_period(NULL);
 	}
 }
 
@@ -70,7 +70,7 @@ void sense (void *arg){
 		
 		rt_sem_v(&sensingDone);
 
-		rt_task_wait_period(NULL);
+		edf_task_wait_period(NULL);
 	}
 }
 
@@ -102,7 +102,7 @@ void process(void *arg){
 		
 		rt_sem_v(&processingDone);
 
-		rt_task_wait_period(NULL);
+		edf_task_wait_period(NULL);
 	}
 }
 
@@ -133,7 +133,7 @@ void act(void *arg){
 		}
 		shared=res;
 
-		rt_task_wait_period(NULL);
+		edf_task_wait_period(NULL);
 	}
 }
 

@@ -1,0 +1,709 @@
+[17633.595865] Edfomai: [@open] device has been opened
+[17633.604288] Edfomai: [@write] serving request for task (Task-0)
+[17633.604292] Edfomai: [@write] task creation (Task-0)
+[17633.604295] Edfomai: [@dt_create] creating dtask (Task-0) with deadline 8
+[17633.604298] Edfomai: [@dt_rcalcp] recalculating priorities of 1 tasks
+[17633.604300] Edfomai: [@dt_rcalcp] #tasks(1) #missed(1)
+[17633.604302] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17633.604307] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17633.608053] Edfomai: [@write] serving request for task (Task-0)
+[17633.608053] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17633.608053] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17633.608053] Edfomai: [@write] serving request for task (Task-1)
+[17633.608053] Edfomai: [@write] task creation (Task-1)
+[17633.608053] Edfomai: [@dt_create] creating dtask (Task-1) with deadline 16
+[17633.608053] Edfomai: [@dt_rcalcp] recalculating priorities of 2 tasks
+[17633.608053] Edfomai: [@dt_rcalcp] #tasks(2) #missed(2)
+[17633.608053] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17633.608053] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17633.608053] Edfomai: [@write] serving request for task (Task-1)
+[17633.608053] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17633.608053] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17633.608053] Edfomai: [@write] serving request for task (Task-2)
+[17633.608053] Edfomai: [@write] task creation (Task-2)
+[17633.608053] Edfomai: [@dt_create] creating dtask (Task-2) with deadline 12
+[17633.608053] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17633.608053] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17633.608053] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17633.608053] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17633.608053] Edfomai: [@write] serving request for task (Task-2)
+[17633.608053] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17633.608053] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17633.608053] Edfomai: [@write] serving request for task (Task-0)
+[17633.608053] Edfomai: [@write] task reset deadline (Task-0)
+[17633.608053] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17633.608053] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17633.608053] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17633.608053] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17633.608053] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17633.608053] Edfomai: [@write] serving request for task (Task-0)
+[17633.608053] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17633.608053] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17635.205238] Edfomai: [@write] serving request for task (Task-0)
+[17635.205246] Edfomai: [@write] task reset deadline (Task-0)
+[17635.205254] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17635.205259] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17635.205264] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17635.205268] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17635.205278] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17635.405509] Edfomai: [@write] serving request for task (Task-0)
+[17635.405513] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17635.405517] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17635.405561] Edfomai: [@write] serving request for task (Task-2)
+[17635.405562] Edfomai: [@write] task reset deadline (Task-2)
+[17635.405565] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17635.405567] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17635.405569] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17635.405571] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17635.405576] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17635.409440] Edfomai: [@write] serving request for task (Task-2)
+[17635.409440] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17635.409440] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17635.409440] Edfomai: [@write] serving request for task (Task-1)
+[17635.409440] Edfomai: [@write] task reset deadline (Task-1)
+[17635.409440] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17635.409440] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17635.409440] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17635.409440] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17635.409440] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17635.409440] Edfomai: [@write] serving request for task (Task-1)
+[17635.409440] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17635.409440] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17635.409440] Edfomai: [@write] serving request for task (Task-0)
+[17635.409440] Edfomai: [@write] task reset deadline (Task-0)
+[17635.409440] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17635.409440] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17635.409440] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17635.409440] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17635.409440] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17635.409440] Edfomai: [@write] serving request for task (Task-0)
+[17635.409440] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17635.409440] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17636.508468] Edfomai: [@write] serving request for task (Task-2)
+[17636.508479] Edfomai: [@write] task reset deadline (Task-2)
+[17636.508487] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17636.508493] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17636.508498] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17636.508502] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17636.508511] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17636.512415] Edfomai: [@write] serving request for task (Task-2)
+[17636.512415] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17636.512415] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17636.512415] Edfomai: [@write] serving request for task (Task-0)
+[17636.512415] Edfomai: [@write] task reset deadline (Task-0)
+[17636.512415] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17636.512415] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17636.512415] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17636.512415] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17636.512415] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17636.512415] Edfomai: [@write] serving request for task (Task-0)
+[17636.512415] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17636.512415] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17636.512415] Edfomai: [@write] serving request for task (Task-1)
+[17636.512415] Edfomai: [@write] task reset deadline (Task-1)
+[17636.512415] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17636.512415] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17636.512415] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17636.512415] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17636.512415] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17636.512415] Edfomai: [@write] serving request for task (Task-1)
+[17636.512415] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17636.512415] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17637.607087] Edfomai: [@write] serving request for task (Task-0)
+[17637.607092] Edfomai: [@write] task reset deadline (Task-0)
+[17637.607098] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17637.607102] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17637.607105] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17637.607107] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17637.607113] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17637.611024] Edfomai: [@write] serving request for task (Task-0)
+[17637.611024] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17637.611024] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17637.611024] Edfomai: [@write] serving request for task (Task-2)
+[17637.611024] Edfomai: [@write] task reset deadline (Task-2)
+[17637.611024] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17637.611024] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17637.611024] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17637.611024] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17637.611024] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17638.308245] Edfomai: [@write] serving request for task (Task-2)
+[17638.308258] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17638.308269] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17638.406691] Edfomai: [@write] serving request for task (Task-0)
+[17638.406699] Edfomai: [@write] task reset deadline (Task-0)
+[17638.406707] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17638.406712] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17638.406718] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17638.406722] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17638.406731] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17638.410628] Edfomai: [@write] serving request for task (Task-0)
+[17638.410628] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17638.410628] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17638.607372] Edfomai: [@write] serving request for task (Task-1)
+[17638.607374] Edfomai: [@write] task reset deadline (Task-1)
+[17638.607377] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17638.607379] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17638.607381] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17638.607382] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17638.607387] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17638.611363] Edfomai: [@write] serving request for task (Task-1)
+[17638.611363] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17638.611363] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17638.909367] Edfomai: [@write] serving request for task (Task-2)
+[17638.909370] Edfomai: [@write] task reset deadline (Task-2)
+[17638.909381] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17638.909384] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17638.909386] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17638.909387] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17638.909392] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17638.912912] Edfomai: [@write] serving request for task (Task-2)
+[17638.912912] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17638.912912] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17638.912912] Edfomai: [@write] serving request for task (Task-0)
+[17638.912912] Edfomai: [@write] task reset deadline (Task-0)
+[17638.912912] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17638.912912] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17638.912912] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17638.912912] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17638.912912] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17638.912912] Edfomai: [@write] serving request for task (Task-0)
+[17638.912912] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17638.912912] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17640.007385] Edfomai: [@write] serving request for task (Task-0)
+[17640.007393] Edfomai: [@write] task reset deadline (Task-0)
+[17640.007401] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17640.007406] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17640.007412] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17640.007416] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17640.007425] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17640.207640] Edfomai: [@write] serving request for task (Task-0)
+[17640.207644] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17640.207648] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17640.207708] Edfomai: [@write] serving request for task (Task-2)
+[17640.207710] Edfomai: [@write] task reset deadline (Task-2)
+[17640.207712] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17640.207715] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17640.207717] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17640.207718] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17640.207723] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17640.211577] Edfomai: [@write] serving request for task (Task-2)
+[17640.211577] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17640.211577] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17640.211577] Edfomai: [@write] serving request for task (Task-1)
+[17640.211577] Edfomai: [@write] task reset deadline (Task-1)
+[17640.211577] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17640.211577] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17640.211577] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17640.211577] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17640.211577] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17640.211577] Edfomai: [@write] serving request for task (Task-1)
+[17640.211577] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17640.211577] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17640.211577] Edfomai: [@write] serving request for task (Task-0)
+[17640.211577] Edfomai: [@write] task reset deadline (Task-0)
+[17640.211577] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17640.211577] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17640.211577] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17640.211577] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17640.211577] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17640.211577] Edfomai: [@write] serving request for task (Task-0)
+[17640.211577] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17640.211577] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17641.310587] Edfomai: [@write] serving request for task (Task-2)
+[17641.310595] Edfomai: [@write] task reset deadline (Task-2)
+[17641.310603] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17641.310609] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17641.310614] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17641.310618] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17641.310628] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17641.314536] Edfomai: [@write] serving request for task (Task-2)
+[17641.314536] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17641.314536] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17641.314536] Edfomai: [@write] serving request for task (Task-0)
+[17641.314536] Edfomai: [@write] task reset deadline (Task-0)
+[17641.314536] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17641.314536] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17641.314536] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17641.314536] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17641.314536] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17641.314536] Edfomai: [@write] serving request for task (Task-0)
+[17641.314536] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17641.314536] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17641.314536] Edfomai: [@write] serving request for task (Task-1)
+[17641.314536] Edfomai: [@write] task reset deadline (Task-1)
+[17641.314536] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17641.314536] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17641.314536] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17641.314536] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17641.314536] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17641.314536] Edfomai: [@write] serving request for task (Task-1)
+[17641.314536] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17641.314536] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17642.408451] Edfomai: [@write] serving request for task (Task-0)
+[17642.408459] Edfomai: [@write] task reset deadline (Task-0)
+[17642.408467] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17642.408472] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17642.408478] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17642.408482] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17642.408491] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17642.412388] Edfomai: [@write] serving request for task (Task-0)
+[17642.412388] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17642.412388] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17642.412388] Edfomai: [@write] serving request for task (Task-2)
+[17642.412388] Edfomai: [@write] task reset deadline (Task-2)
+[17642.412388] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17642.412388] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17642.412388] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17642.412388] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17642.412388] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17642.412388] Edfomai: [@write] serving request for task (Task-2)
+[17642.412388] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17642.412388] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17643.208828] Edfomai: [@write] serving request for task (Task-0)
+[17643.208836] Edfomai: [@write] task reset deadline (Task-0)
+[17643.208845] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17643.208850] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17643.208855] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17643.208859] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17643.208869] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17643.212768] Edfomai: [@write] serving request for task (Task-0)
+[17643.212768] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17643.212768] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17643.409445] Edfomai: [@write] serving request for task (Task-1)
+[17643.409448] Edfomai: [@write] task reset deadline (Task-1)
+[17643.409450] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17643.409452] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17643.409455] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17643.409464] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17643.409469] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17643.413436] Edfomai: [@write] serving request for task (Task-1)
+[17643.413436] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17643.413436] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17643.711566] Edfomai: [@write] serving request for task (Task-2)
+[17643.711568] Edfomai: [@write] task reset deadline (Task-2)
+[17643.711572] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17643.711574] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17643.711576] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17643.711577] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17643.711582] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17644.212316] Edfomai: [@write] serving request for task (Task-2)
+[17644.212321] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17644.212325] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17644.212370] Edfomai: [@write] serving request for task (Task-0)
+[17644.212380] Edfomai: [@write] task reset deadline (Task-0)
+[17644.212383] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17644.212385] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17644.212388] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17644.212389] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17644.212394] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17644.216181] Edfomai: [@write] serving request for task (Task-0)
+[17644.216181] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17644.216181] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17644.809496] Edfomai: [@write] serving request for task (Task-0)
+[17644.809505] Edfomai: [@write] task reset deadline (Task-0)
+[17644.809513] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17644.809518] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17644.809524] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17644.809528] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17644.809537] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17645.009775] Edfomai: [@write] serving request for task (Task-0)
+[17645.009780] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17645.009783] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17645.009842] Edfomai: [@write] serving request for task (Task-2)
+[17645.009844] Edfomai: [@write] task reset deadline (Task-2)
+[17645.009846] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17645.009848] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17645.009851] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17645.009852] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17645.009857] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17645.013690] Edfomai: [@write] serving request for task (Task-2)
+[17645.013690] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17645.013690] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17645.013690] Edfomai: [@write] serving request for task (Task-1)
+[17645.013690] Edfomai: [@write] task reset deadline (Task-1)
+[17645.013690] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17645.013690] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17645.013690] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17645.013690] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17645.013690] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17645.013690] Edfomai: [@write] serving request for task (Task-1)
+[17645.013690] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17645.013690] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17645.013690] Edfomai: [@write] serving request for task (Task-0)
+[17645.013690] Edfomai: [@write] task reset deadline (Task-0)
+[17645.013690] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17645.013690] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17645.013690] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17645.013690] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17645.013690] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17645.013690] Edfomai: [@write] serving request for task (Task-0)
+[17645.013690] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17645.013690] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17646.112656] Edfomai: [@write] serving request for task (Task-2)
+[17646.112662] Edfomai: [@write] task reset deadline (Task-2)
+[17646.112668] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17646.112672] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17646.112675] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17646.112678] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17646.112684] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17646.116624] Edfomai: [@write] serving request for task (Task-2)
+[17646.116624] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17646.116624] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17646.116624] Edfomai: [@write] serving request for task (Task-0)
+[17646.116624] Edfomai: [@write] task reset deadline (Task-0)
+[17646.116624] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17646.116624] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17646.116624] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17646.116624] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17646.116624] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17646.116624] Edfomai: [@write] serving request for task (Task-0)
+[17646.116624] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17646.116624] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17646.116624] Edfomai: [@write] serving request for task (Task-1)
+[17646.116624] Edfomai: [@write] task reset deadline (Task-1)
+[17646.116624] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17646.116624] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17646.116624] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17646.116624] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17646.116624] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17646.116624] Edfomai: [@write] serving request for task (Task-1)
+[17646.116624] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17646.116624] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17647.210654] Edfomai: [@write] serving request for task (Task-0)
+[17647.210662] Edfomai: [@write] task reset deadline (Task-0)
+[17647.210670] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17647.210676] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17647.210681] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17647.210728] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17647.210740] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17647.214584] Edfomai: [@write] serving request for task (Task-0)
+[17647.214584] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17647.214584] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17647.214584] Edfomai: [@write] serving request for task (Task-2)
+[17647.214584] Edfomai: [@write] task reset deadline (Task-2)
+[17647.214584] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17647.214584] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17647.214584] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17647.214584] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17647.214584] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17647.214584] Edfomai: [@write] serving request for task (Task-2)
+[17647.214584] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17647.214584] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17648.010921] Edfomai: [@write] serving request for task (Task-0)
+[17648.010929] Edfomai: [@write] task reset deadline (Task-0)
+[17648.010938] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17648.010943] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17648.010948] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17648.010952] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17648.010960] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17648.211214] Edfomai: [@write] serving request for task (Task-0)
+[17648.211219] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17648.211222] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17648.211610] Edfomai: [@write] serving request for task (Task-1)
+[17648.211612] Edfomai: [@write] task reset deadline (Task-1)
+[17648.211615] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17648.211618] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17648.211620] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17648.211621] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17648.211625] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17648.215155] Edfomai: [@write] serving request for task (Task-1)
+[17648.215155] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17648.215155] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17648.513617] Edfomai: [@write] serving request for task (Task-2)
+[17648.513620] Edfomai: [@write] task reset deadline (Task-2)
+[17648.513623] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17648.513625] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17648.513636] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17648.513637] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17648.513641] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17648.517010] Edfomai: [@write] serving request for task (Task-2)
+[17648.517010] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17648.517010] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17648.517010] Edfomai: [@write] serving request for task (Task-0)
+[17648.517010] Edfomai: [@write] task reset deadline (Task-0)
+[17648.517010] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17648.517010] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17648.517010] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17648.517010] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17648.517010] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17648.517010] Edfomai: [@write] serving request for task (Task-0)
+[17648.517010] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17648.517010] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17649.611671] Edfomai: [@write] serving request for task (Task-0)
+[17649.611679] Edfomai: [@write] task reset deadline (Task-0)
+[17649.611687] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17649.611693] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17649.611698] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17649.611702] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17649.611710] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17649.615595] Edfomai: [@write] serving request for task (Task-0)
+[17649.615595] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17649.615595] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17649.615595] Edfomai: [@write] serving request for task (Task-2)
+[17649.615595] Edfomai: [@write] task reset deadline (Task-2)
+[17649.615595] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17649.615595] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17649.615595] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17649.615595] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17649.615595] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17649.615595] Edfomai: [@write] serving request for task (Task-2)
+[17649.615595] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17649.615595] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17649.615595] Edfomai: [@write] serving request for task (Task-1)
+[17649.615595] Edfomai: [@write] task reset deadline (Task-1)
+[17649.615595] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17649.615595] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17649.615595] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17649.615595] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17649.615595] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17649.615595] Edfomai: [@write] serving request for task (Task-1)
+[17649.615595] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17649.615595] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17649.615595] Edfomai: [@write] serving request for task (Task-0)
+[17649.615595] Edfomai: [@write] task reset deadline (Task-0)
+[17649.615595] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17649.615595] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17649.615595] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17649.615595] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17649.615595] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17649.615595] Edfomai: [@write] serving request for task (Task-0)
+[17649.615595] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17649.615595] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17650.915362] Edfomai: [@write] serving request for task (Task-2)
+[17650.915370] Edfomai: [@write] task reset deadline (Task-2)
+[17650.915379] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17650.915384] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17650.915389] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17650.915393] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17650.915401] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17650.919261] Edfomai: [@write] serving request for task (Task-2)
+[17650.919261] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17650.919261] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17650.919261] Edfomai: [@write] serving request for task (Task-0)
+[17650.919261] Edfomai: [@write] task reset deadline (Task-0)
+[17650.919261] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17650.919261] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17650.919261] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17650.919261] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17650.919261] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17650.919261] Edfomai: [@write] serving request for task (Task-0)
+[17650.919261] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17650.919261] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17650.919261] Edfomai: [@write] serving request for task (Task-1)
+[17650.919261] Edfomai: [@write] task reset deadline (Task-1)
+[17650.919261] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17650.919261] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17650.919261] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17650.919261] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17650.919261] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17650.919261] Edfomai: [@write] serving request for task (Task-1)
+[17650.919261] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17650.919261] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17652.012759] Edfomai: [@write] serving request for task (Task-0)
+[17652.012768] Edfomai: [@write] task reset deadline (Task-0)
+[17652.012776] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17652.012781] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17652.012787] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17652.012790] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17652.012798] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17652.212977] Edfomai: [@write] serving request for task (Task-0)
+[17652.212982] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17652.212986] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17652.213033] Edfomai: [@write] serving request for task (Task-2)
+[17652.213035] Edfomai: [@write] task reset deadline (Task-2)
+[17652.213037] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17652.213039] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17652.213042] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17652.213043] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17652.213047] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17652.216909] Edfomai: [@write] serving request for task (Task-2)
+[17652.216909] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17652.216909] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17652.813060] Edfomai: [@write] serving request for task (Task-0)
+[17652.813068] Edfomai: [@write] task reset deadline (Task-0)
+[17652.813076] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17652.813082] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17652.813087] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17652.813091] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17652.813099] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17652.817007] Edfomai: [@write] serving request for task (Task-0)
+[17652.817007] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17652.817007] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17652.817007] Edfomai: [@write] serving request for task (Task-1)
+[17652.817007] Edfomai: [@write] task reset deadline (Task-1)
+[17652.817007] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17652.817007] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17652.817007] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17652.817007] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17652.817007] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17652.817007] Edfomai: [@write] serving request for task (Task-1)
+[17652.817007] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17652.817007] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17653.315833] Edfomai: [@write] serving request for task (Task-2)
+[17653.315835] Edfomai: [@write] task reset deadline (Task-2)
+[17653.315838] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17653.315840] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17653.315842] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17653.315844] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17653.315848] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17653.319817] Edfomai: [@write] serving request for task (Task-2)
+[17653.319817] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17653.319817] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17653.319817] Edfomai: [@write] serving request for task (Task-0)
+[17653.319817] Edfomai: [@write] task reset deadline (Task-0)
+[17653.319817] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17653.319817] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17653.319817] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17653.319817] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17653.319817] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17653.319817] Edfomai: [@write] serving request for task (Task-0)
+[17653.319817] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17653.319817] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17654.413831] Edfomai: [@write] serving request for task (Task-0)
+[17654.413845] Edfomai: [@write] task reset deadline (Task-0)
+[17654.413858] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17654.413866] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17654.413873] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17654.413879] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17654.413889] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17654.614443] Edfomai: [@write] serving request for task (Task-0)
+[17654.614448] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17654.614452] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17654.614504] Edfomai: [@write] serving request for task (Task-2)
+[17654.614506] Edfomai: [@write] task reset deadline (Task-2)
+[17654.614508] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17654.614510] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17654.614513] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17654.614514] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17654.614518] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17654.618308] Edfomai: [@write] serving request for task (Task-2)
+[17654.618308] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17654.618308] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17654.618308] Edfomai: [@write] serving request for task (Task-1)
+[17654.618308] Edfomai: [@write] task reset deadline (Task-1)
+[17654.618308] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17654.618308] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17654.618308] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17654.618308] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17654.618308] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17654.618308] Edfomai: [@write] serving request for task (Task-1)
+[17654.618308] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17654.618308] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17654.618308] Edfomai: [@write] serving request for task (Task-0)
+[17654.618308] Edfomai: [@write] task reset deadline (Task-0)
+[17654.618308] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17654.618308] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17654.618308] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17654.618308] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17654.618308] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17654.618308] Edfomai: [@write] serving request for task (Task-0)
+[17654.618308] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17654.618308] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17655.717009] Edfomai: [@write] serving request for task (Task-2)
+[17655.717035] Edfomai: [@write] task reset deadline (Task-2)
+[17655.717044] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17655.717049] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17655.717054] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17655.717058] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17655.717066] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17655.720962] Edfomai: [@write] serving request for task (Task-2)
+[17655.720962] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17655.720962] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17655.720962] Edfomai: [@write] serving request for task (Task-0)
+[17655.720962] Edfomai: [@write] task reset deadline (Task-0)
+[17655.720962] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17655.720962] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17655.720962] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17655.720962] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17655.720962] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17655.720962] Edfomai: [@write] serving request for task (Task-0)
+[17655.720962] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17655.720962] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17655.720962] Edfomai: [@write] serving request for task (Task-1)
+[17655.720962] Edfomai: [@write] task reset deadline (Task-1)
+[17655.720962] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17655.720962] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17655.720962] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17655.720962] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17655.720962] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17655.720962] Edfomai: [@write] serving request for task (Task-1)
+[17655.720962] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17655.720962] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17656.814909] Edfomai: [@write] serving request for task (Task-0)
+[17656.814917] Edfomai: [@write] task reset deadline (Task-0)
+[17656.814925] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17656.814930] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17656.814936] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17656.814939] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17656.814947] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17656.818823] Edfomai: [@write] serving request for task (Task-0)
+[17656.818823] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17656.818823] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17656.818823] Edfomai: [@write] serving request for task (Task-2)
+[17656.818823] Edfomai: [@write] task reset deadline (Task-2)
+[17656.818823] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17656.818823] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17656.818823] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17656.818823] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17656.818823] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17656.818823] Edfomai: [@write] serving request for task (Task-2)
+[17656.818823] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17656.818823] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17657.615156] Edfomai: [@write] serving request for task (Task-0)
+[17657.615163] Edfomai: [@write] task reset deadline (Task-0)
+[17657.615169] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17657.615173] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17657.615176] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17657.615178] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17657.615182] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17657.815380] Edfomai: [@write] serving request for task (Task-0)
+[17657.815384] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17657.815388] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17657.815812] Edfomai: [@write] serving request for task (Task-1)
+[17657.815815] Edfomai: [@write] task reset deadline (Task-1)
+[17657.815817] Edfomai: [@dt_resetdline] resetting deadline of task (Task-1)
+[17657.815820] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17657.815822] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17657.815823] Edfomai: [@dt_rcalcp] task (Task-1) has missed his deadline
+[17657.815827] Edfomai: [@dt_rcalcp] task(Task-1) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17657.819314] Edfomai: [@write] serving request for task (Task-1)
+[17657.819314] Edfomai: [@write] stopping watchdog of task (Task-1)
+[17657.819314] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-1)
+[17658.118097] Edfomai: [@write] serving request for task (Task-2)
+[17658.118100] Edfomai: [@write] task reset deadline (Task-2)
+[17658.118104] Edfomai: [@dt_resetdline] resetting deadline of task (Task-2)
+[17658.118106] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17658.118108] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17658.118110] Edfomai: [@dt_rcalcp] task (Task-2) has missed his deadline
+[17658.118113] Edfomai: [@dt_rcalcp] task(Task-2) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17658.121992] Edfomai: [@write] serving request for task (Task-2)
+[17658.121992] Edfomai: [@write] stopping watchdog of task (Task-2)
+[17658.121992] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-2)
+[17658.121992] Edfomai: [@write] serving request for task (Task-0)
+[17658.121992] Edfomai: [@write] task reset deadline (Task-0)
+[17658.121992] Edfomai: [@dt_resetdline] resetting deadline of task (Task-0)
+[17658.121992] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[17658.121992] Edfomai: [@dt_rcalcp] #tasks(3) #missed(3)
+[17658.121992] Edfomai: [@dt_rcalcp] task (Task-0) has missed his deadline
+[17658.121992] Edfomai: [@dt_rcalcp] task(Task-0) oldP(50) newP(50) remain(0) maxRem(0) minRem=(0)
+[17658.121992] Edfomai: [@write] serving request for task (Task-0)
+[17658.121992] Edfomai: [@write] stopping watchdog of task (Task-0)
+[17658.121992] Edfomai: [@dt_stopwdg] stopping watchdog of task (Task-0)
+[17658.820167] Edfomai: [@delete] task deleted (Task-0)
+[17658.820169] Edfomai: [@dt_delete] deleting dtask (Task-0)
+[17658.820170] Edfomai: [@start/switch] task started or switched (Task-0)
+[17658.820172] Edfomai: [@svc] recalculating priorities
+[17658.820173] Edfomai: [@dt_rcalcp] recalculating priorities of 2 tasks
+[17658.820175] Edfomai: [@dt_rcalcp] #tasks(2) #missed(2)
+[17658.820211] Edfomai: [@delete] task deleted (Task-1)
+[17658.820213] Edfomai: [@dt_delete] deleting dtask (Task-1)
+[17658.820214] Edfomai: [@start/switch] task started or switched (Task-1)
+[17658.820216] Edfomai: [@svc] recalculating priorities
+[17658.820217] Edfomai: [@dt_rcalcp] recalculating priorities of 1 tasks
+[17658.820219] Edfomai: [@dt_rcalcp] #tasks(1) #missed(1)
+[17658.820232] Edfomai: [@delete] task deleted (Task-2)
+[17658.820234] Edfomai: [@dt_delete] deleting dtask (Task-2)
+[17658.820235] Edfomai: [@start/switch] task started or switched (Task-2)
+[17658.820237] Edfomai: [@svc] recalculating priorities
+[17658.820238] Edfomai: [@dt_rcalcp] recalculating priorities of 0 tasks
+[17658.823333] Edfomai: [@close] device has been closed

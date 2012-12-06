@@ -31,7 +31,7 @@ void demo (void *arg){
 	rt_task_set_periodic(NULL,TM_NOW,params[0]*p);
 	while(1){
 		rt_timer_spin(params[1]*p);
-		rt_task_wait_period(NULL);
+		edf_task_wait_period(NULL);
 	}
 }
 
