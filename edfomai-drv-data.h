@@ -3,12 +3,11 @@
 
 #ifdef MODULE
 #include <rtdm/rtdm_driver.h>
-#include <native/task.h>
 #else
 #include <stdlib.h>
+#endif
 #include <native/task.h>
 #include <native/alarm.h>
-#endif
 
 #include "edfomai-data.h"
 
