@@ -33,9 +33,9 @@ void comunicate(void *arg){
 		rt_sem_p(&exLock,0);
 		res = sharedResource;
 		rt_sem_v(&exLock);
-		rt_printf("[comunicator] sending: %d",res);
+		rt_printf("[comunicator] sending: %d\n",res);
 		rt_timer_spin(6*t);
-		rt_printf("[comunicator] sent: %d",res);
+		rt_printf("[comunicator] sent: %d\n",res);
 		rt_task_wait_period(NULL);
 	}
 }
@@ -61,7 +61,7 @@ void sense (void *arg){
 	while(!stopped){
 		for ( i=0 ; i < param[1]; i++){
 			rt_timer_spin(t);
-			rt_print("[%s] executing\n",curtaskinfo.name);
+			rt_printf("[%s] executing\n",curtaskinfo.name);
 		}
 		
 		rt_sem_p(&exLock,0);
@@ -76,7 +76,6 @@ void sense (void *arg){
 
 void process(void *arg){
 	int i;
-	int res;
 	unsigned long* param;
 	param = (unsigned long*)arg;
         RT_TASK *curtask;
@@ -94,7 +93,7 @@ void process(void *arg){
 		
 		for ( i=0 ; i < param[1]; i++){
 			rt_timer_spin(t);
-			rt_print("[%s] executing\n",curtaskinfo.name);
+			rt_printf("[%s] executing\n",curtaskinfo.name);
 		}
 		
 		rt_sem_p(&exLock,0);
@@ -130,7 +129,7 @@ void act(void *arg){
 		rt_sem_v(&exLock);
 		for ( i=0 ; i < param[1]; i++){
 			rt_timer_spin(t);
-			rt_print("[%s] executing\n",curtaskinfo.name);
+			rt_printf("[%s] executing\n",curtaskinfo.name);
 		}
 		shared=res;
 
@@ -173,7 +172,7 @@ void startup(){
 	edf_task_start(&task, 65*t, &comunicate, NULL);
 }
 
-void init_edfomai() {
+int init_edfomai() {
 	// Perform auto-init of rt_print buffers if the task doesn't do so
 	rt_print_auto_init(1);
 
@@ -181,8 +180,7 @@ void init_edfomai() {
 	mlockall(MCL_CURRENT|MCL_FUTURE);
 
 	// Initialize edf
-	if(edf_init())
-		exit(1);
+	return edf_init();
 
 //	// Make the current task an RT_TASK
 //	rt_task_shadow(&spawner, str0,50,T_CPU(0));
@@ -207,7 +205,8 @@ void cleanup(){
 }
 
 int main(int argn, char** argv){
-	init_edfomai();
+	if (init_edfomai())
+		return -1;
 	rt_printf("initialized.\n");
 	rt_printf("starting up...\n");
 	startup();

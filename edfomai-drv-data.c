@@ -35,7 +35,7 @@ extern void deadline_missed( struct rt_alarm *alarm, void * cookie );
 */
 static inline int _calculate_prio( unsigned long remain, 
 			unsigned long min_remain, unsigned long max_remain){
-	return (unsigned int) MAXPRIO - ( (remain-min_remain) * (MAXPRIO-MINPRIO) / 
+	return (unsigned int) MAXPRIO - (unsigned int) ( (remain-min_remain) * (MAXPRIO-MINPRIO) / 
 		( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain ));
 }
 /*
@@ -49,10 +49,10 @@ int rt_dtask_recalculateprio(){
 	RT_TASK_INFO task_info;
 	unsigned int newprio;
 	unsigned long curr_time, min_remain=0xffffffffffffffff, max_remain=0; // 2^64 -1
-	int count=0;
+	int count=0, missed=0;
 	count=HASH_COUNT(dtask_map);
 	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@recalcprio] recalculating priorities of %d tasks\n",count);
+	rtdm_printk("Edfomai: [@dt_rcalcp] recalculating priorities of %d tasks\n",count);
 	#endif
 	if (!count)
 		return 0;
@@ -62,28 +62,31 @@ int rt_dtask_recalculateprio(){
 		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET && rtdtask->dtask.status==OK ){
 			rtdtask->dtask.remain=(rtdtask->dtask.deadline > curr_time ?
 							rtdtask->dtask.deadline - curr_time : 0);
-			if (rtdtask->dtask.remain==0){
-				rtdtask->dtask.status=MISSED;
-			} else {
-				min_remain=(rtdtask->dtask.remain < min_remain ? rtdtask->dtask.remain : min_remain );
-				max_remain=(rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
-				rt_task_inquire(rtdtask->dtask.task,&task_info);
-				#ifdef DEBUG
-				//rtdm_printk("Edfomai: [@recalcprio] task(%s) remain(%lu) tasks\n",
-				//		rtdtask->dtask.task->rname,rtdtask->dtask.remain);
-				#endif
-				rt_task_inquire(rtdtask->dtask.task, &(rtdtask->dtask.task_info));
-			}
+			if (rtdtask->dtask.remain==0)
+				missed++;
+			min_remain=(rtdtask->dtask.remain < min_remain ? rtdtask->dtask.remain : min_remain );
+			max_remain=(rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
+			rt_task_inquire(rtdtask->dtask.task,&task_info);
+			rt_task_inquire(rtdtask->dtask.task, &(rtdtask->dtask.task_info));
+		}else if (rtdtask->dtask.status==MISSED){
+			missed++;
 		}
 	}
 	#ifdef DEBUG
-	//rtdm_printk("Edfomai: [@recalcprio] recalculating priorities. minR=(%lu) maxR=(%lu)\n", min_remain,max_remain);
+	rtdm_printk("Edfomai: [@dt_rcalcp] #tasks(%d) #missed(%d)\n",count,missed);
 	#endif
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 		if ( rtdtask->dtask.relative_deadline!=DEADLINENOTSET && rtdtask->dtask.status==OK ){
+			if (rtdtask->dtask.remain==0){
+				rtdtask->dtask.status=MISSED;
+				#ifdef DEBUG
+				rtdm_printk("Edfomai: [@dt_rcalcp] task (%s) has missed his deadline\n",rtdtask->dtask.task->rname);
+				#endif
+				deadline_missed(NULL,rtdtask->dtask.task);
+			}
 			newprio=_calculate_prio(rtdtask->dtask.remain, min_remain, max_remain );
 			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@recalcprio] task(%s) oldP(%u) newP(%u) remain(%lu) maxRem(%lu) minRem=(%lu)\n",
+			rtdm_printk("Edfomai: [@dt_rcalcp] task(%s) oldP(%u) newP(%u) remain(%lu) maxRem(%lu) minRem=(%lu)\n",
 								rtdtask->dtask.task_info.name, rtdtask->dtask.task_info.cprio, 
 								newprio, rtdtask->dtask.remain ,max_remain, min_remain );
 			#endif
@@ -104,9 +107,9 @@ int rt_dtask_stopwatchdog ( RT_TASK * task ){
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
 		#ifdef DEBUG
-		rtdm_printk("Edfomai: [@stopwatchd] stopping watchdog of task (%s)\n",task_info->name);
+		rtdm_printk("Edfomai: [@dt_stopwdg] stopping watchdog of task (%s)\n",task_info->name);
 		#endif
-		rt_alarm_stop( rtdtask->dtask.watchd );
+		ret=0;//rt_alarm_stop( rtdtask->dtask.watchd );
 	}
 	rtdm_free(task_info);
 	return ret;
@@ -122,9 +125,9 @@ int rt_dtask_updateinfo ( RT_TASK * task ){
 	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
-			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@updateinfo] updating info of task (%s)\n",task_info->name);
-			#endif
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@rt_updinfo] updating info of task (%s)\n",task_info->name);
+		#endif
 		ret=rt_task_inquire( rtdtask->dtask.task , &(rtdtask->dtask.task_info) );
 	}
 	rtdm_free(task_info);
@@ -142,18 +145,18 @@ int rt_dtask_resetdeadline( RT_TASK * task){
 	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
-			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@resetdeadline] resetting deadline of task (%s)\n",
-				task_info->name);
-			#endif
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@dt_resetdline] resetting deadline of task (%s)\n",
+			task_info->name);
+		#endif
 		rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.remain=rtdtask->dtask.relative_deadline;
-		ret=0;
+		rtdtask->dtask.status=OK;
 		// TODO: reset watchdog
-		rt_alarm_stop( rtdtask->dtask.watchd );
-		rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
-		
+		//rt_alarm_stop( rtdtask->dtask.watchd );
+		//rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
 		rt_dtask_recalculateprio();
+		ret=0;
 	}
 	rtdm_free(task_info);
 	return ret;
@@ -174,20 +177,20 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
-			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@setdeadline] setting deadline of task(%s) to %lu\n",
-											task_info->name, newdeadline);
-			#endif
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@dt_setdline] setting deadline of task(%s) to %lu\n",
+										task_info->name, newdeadline);
+		#endif
 		rtdtask->dtask.relative_deadline = newdeadline;
 		rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.remain=rtdtask->dtask.relative_deadline;
+		rtdtask->dtask.status=OK;
 		// TODO: reset watchdog
-		rt_alarm_stop( rtdtask->dtask.watchd );
-		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET)
-			rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
-		
-		ret=0;
+		//rt_alarm_stop( rtdtask->dtask.watchd );
+		//if (rtdtask->dtask.relative_deadline != DEADLINENOTSET)
+		//	rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
 		rt_dtask_recalculateprio();
+		ret=0;
 	}
 	return ret;
 }
@@ -198,11 +201,11 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 *
-* NOTE: might cause a priority recalculation;
+* NOTE: cause a priority recalculation;
 */
 int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
 	RT_DTASK * rtdtask,* tmp;
-	char a_name [TNAME_LEN+5];
+	//char a_name [TNAME_LEN+5];
 	#ifdef MODULE
 	rtdtask = (RT_DTASK*) rtdm_malloc(sizeof(RT_DTASK));	
 	#else
@@ -216,23 +219,22 @@ int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
 	rt_task_inquire( rtdtask->dtask.task , &(rtdtask->dtask.task_info) );
 	HASH_FIND_STR( dtask_map, rtdtask->dtask.task_info.name, tmp);
 	if (tmp==NULL){
-			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@dt_create] creating dtask (%s) with deadline %lu\n",
-				rtdtask->dtask.task_info.name, deadline);
-			#endif
-			strncpy( (char*) &(a_name), (char*)&(rtdtask->dtask.task_info.name),TNAME_LEN);
-			a_name[TNAME_LEN] = "-WDG\0";
-			rt_alarm_create ( rtdtask->dtask.watchd, (char*) &(a_name), 
-								&deadline_missed, (void*) rtdtask->dtask.task);
-			if (rtdtask->dtask.relative_deadline != DEADLINENOTSET)
-				rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
-			
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@dt_create] creating dtask (%s) with deadline %lu\n",
+			rtdtask->dtask.task_info.name, deadline);
+		#endif
+		//strncpy( (char*) &(a_name), (char*)&(rtdtask->dtask.task_info.name),TNAME_LEN);
+		//a_name[TNAME_LEN] = "-WDG\0";
+		//rt_alarm_create ( rtdtask->dtask.watchd, (char*) &(a_name), 
+		//					&deadline_missed, (void*) rtdtask->dtask.task);
+		//if (rtdtask->dtask.relative_deadline != DEADLINENOTSET)
+		//	rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
 		HASH_ADD_STR( dtask_map, dtask.task_info.name , rtdtask);
 	}else{
  		#ifdef DEBUG
-			rtdm_printk("Edfomai: [@dt_create] creation failed. Task (%s) already present\n",rtdtask->dtask.task_info.name);
-			#endif
-			rtdm_free(rtdtask);
+		rtdm_printk("Edfomai: [@dt_create] creation failed. Task (%s) already present\n",rtdtask->dtask.task_info.name);
+		#endif
+		rtdm_free(rtdtask);
 		return -1;
 	}
 	rt_dtask_recalculateprio();
@@ -251,18 +253,16 @@ int rt_dtask_delete ( RT_TASK * task ){
 	rt_task_inquire(task, task_info);
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
-			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@dt_delete] deleting dtask (%s)\n",task_info->name);
-			#endif
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@dt_delete] deleting dtask (%s)\n",task_info->name);
+		#endif
 		HASH_DEL(dtask_map, rtdtask );
-		rt_alarm_stop( rtdtask->dtask.watchd );
+		//rt_alarm_stop( rtdtask->dtask.watchd );
 		clear_dtask( &(rtdtask->dtask) );
 		rtdm_free(rtdtask);
 		ret=0;
 	}
-
-		rtdm_free(task_info);
-
+	rtdm_free(task_info);
 	return ret;
 }
 /*
@@ -281,14 +281,14 @@ int rt_dtask_init(void){
 int rt_dtask_dispose(void){
 	RT_DTASK * rtdtask;
 	RT_DTASK * tmp;
-		#ifdef DEBUG
-		rtdm_printk("Edfomai: [@dt_dispose] clearing dtask data structures\n");
-		#endif
+	#ifdef DEBUG
+	rtdm_printk("Edfomai: [@dt_dispose] clearing dtask data structures\n");
+	#endif
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
-			HASH_DEL(dtask_map,rtdtask);
-			rt_alarm_stop( rtdtask->dtask.watchd );
-			clear_dtask( &(rtdtask->dtask) );
-			rtdm_free(rtdtask);
+		HASH_DEL(dtask_map,rtdtask);
+		//rt_alarm_stop( rtdtask->dtask.watchd );
+		clear_dtask( &(rtdtask->dtask) );
+		rtdm_free(rtdtask);
 	}
 	return 0;
 }

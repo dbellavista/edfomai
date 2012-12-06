@@ -61,5 +61,6 @@ int main (int argc, char * argv[]){
 	}
 	rt_printf("end program by CTRL-C\n");
 	pause();
+	return 0;
 }
 

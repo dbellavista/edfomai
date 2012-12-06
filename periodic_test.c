@@ -11,7 +11,7 @@
 
 #define NPERIODS 10
 #define NWAIT_SESSION 5
-#define WASTE_TIME 360000
+#define WASTE_TIME 300000 //300 000 ns
 #define WAIT_SESSION  (int) WASTE_TIME/NWAIT_SESSION
 
 RT_TASK spawner;
@@ -32,7 +32,7 @@ void demo (void *arg){
 	rt_printf("!%s started\n", curtaskinfo.name);
 	for(p=0;p<NPERIODS;p++){
 		for ( i=0 ; i < WASTE_TIME; i+=WAIT_SESSION ){
-			rt_task_sleep(WAIT_SESSION);
+			rt_timer_spin(WAIT_SESSION);
 			rt_task_inquire(curtask,&curtaskinfo);
 			rt_printf("->%s @ prio %d\n", curtaskinfo.name, curtaskinfo.cprio);
 		}

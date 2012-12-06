@@ -129,7 +129,8 @@ void _edf_service(void *arg){
 		rtdm_printk("Edfomai: [@svc] recalculating priorities\n");
 		#endif
 		ret=_mtx_acquire();
-		if (ret) continue;
+		if (ret) 
+			continue;
 		rt_dtask_recalculateprio();
 		ret=_mtx_release();
 		rtdm_event_clear(&edf_event);
@@ -398,7 +399,7 @@ int __init edf_rtdm_init(void)
 		if (res!=0){
 			rtdm_printk("Edfomai: [@init] mutex (%s) creation failed with status (%d).\n",DMUTEX_NAME,res);
 		}
-		//TODO: init DMISSEDQUEUE
+		
 		rt_queue_create ( &(edf_dmissed_q), DMISSEDQUEUE, DMISSEDQUEUE_SIZE, Q_UNLIMITED, Q_FIFO|Q_SHARED);
 		
 		rtdm_event_init(&edf_event,0);
