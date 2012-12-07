@@ -329,3 +329,37 @@
 [22065.186769] Edfomai: [@dt_rcalcp] recalculating priorities of 0 tasks
 [22065.193885] Edfomai: [@close] device has been closed
 [22065.193891] Edfomai: [@close] device has been closed
+
+Sporadic ======
+[25268.069833] Edfomai: [@init] driver registered correctly
+[25268.069840] Edfomai: [@dt_init] initializing dtask data structures
+[25268.069921] Edfomai: [@svc] edf service started
+[25274.586377] Edfomai: [@open] device has been opened
+[25274.587023] Edfomai: [@write] serving request for task (T1)
+[25274.587029] Edfomai: [@write] task creation (T1)
+[25274.587036] Edfomai: [@dt_create] creating dtask (T1) with deadline 200000
+[25274.587042] Edfomai: [@dt_rcalcp] recalculating priorities of 1 tasks
+[25274.587047] Edfomai: [@dt_rcalcp] #tasks(1) #missed(0)
+[25274.587053] Edfomai: [@dt_rcalcp] task(T1) oldP(25) newP(50) remain(187877) maxRem(187877) minRem=(187877)
+[25274.587077] Edfomai: [@write] serving request for task (T2)
+[25274.587081] Edfomai: [@write] task creation (T2)
+[25274.587086] Edfomai: [@dt_create] creating dtask (T2) with deadline 350000
+[25274.587090] Edfomai: [@dt_rcalcp] recalculating priorities of 2 tasks
+[25274.587095] Edfomai: [@dt_rcalcp] #tasks(2) #missed(0)
+[25274.587101] Edfomai: [@dt_rcalcp] task(T1) oldP(50) newP(50) remain(139846) maxRem(340539) minRem=(139846)
+[25274.587108] Edfomai: [@dt_rcalcp] task(T2) oldP(25) newP(0) remain(340539) maxRem(340539) minRem=(139846)
+[25274.587122] Edfomai: [@write] serving request for task (T3)
+[25274.587126] Edfomai: [@write] task creation (T3)
+[25274.587131] Edfomai: [@dt_create] creating dtask (T3) with deadline 250000
+[25274.587135] Edfomai: [@dt_rcalcp] recalculating priorities of 3 tasks
+[25274.587140] Edfomai: [@dt_rcalcp] #tasks(3) #missed(0)
+[25274.587146] Edfomai: [@dt_rcalcp] task(T1) oldP(50) newP(50) remain(95144) maxRem(295837) minRem=(95144)
+[25274.587152] Edfomai: [@dt_rcalcp] task(T2) oldP(0) newP(0) remain(295837) maxRem(295837) minRem=(95144)
+[25274.587159] Edfomai: [@dt_rcalcp] task(T3) oldP(25) newP(14) remain(240976) maxRem(295837) minRem=(95144)
+[25274.587176] Edfomai: [@close] device has been closed
+[25274.588181] Edfomai: [@delete] task deleted (T1)
+[25274.588186] Edfomai: [@dt_delete] deleting dtask (T1)
+[25274.588190] Edfomai: [@start/switch] task started or switched (T1)
+[25274.588194] Edfomai: [@svc] recalculating priorities
+[25274.588197] Edfomai: [@dt_rcalcp] recalculating priorities of 2 tasks
+
