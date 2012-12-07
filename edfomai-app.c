@@ -150,7 +150,7 @@ int _wait_period(unsigned long * overruns){
 * (depends on how you have compiled xenomai kernel patch). Otherwise can be seedt to 
 * DEADLINENOTSET .
 */
-int edf_task_start( RT_TASK * task, unsigned long deadline, void(*procedure)(void *arg), void * arg ){
+int edf_task_start( RT_TASK * task, unsigned long long deadline, void(*procedure)(void *arg), void * arg ){
 	int ret;
 	EDFMessage * message = (EDFMessage*) malloc(sizeof(EDFMessage));
 	RT_TASK_INFO task_info;

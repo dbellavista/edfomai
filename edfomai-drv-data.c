@@ -35,8 +35,9 @@ extern void deadline_missed( struct rt_alarm *alarm, void * cookie );
 */
 static inline int _calculate_prio( unsigned long remain, 
 			unsigned long min_remain, unsigned long max_remain){
-	return  MAXPRIO - ( (remain-min_remain) * (MAXPRIO-MINPRIO) / 
-		( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain ));
+	long a = (remain-min_remain) * (MAXPRIO-MINPRIO);
+	long b = ( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain );
+	return  MAXPRIO - (unsigned long ) a / b ;
 }
 /*
 * Recalculate tasks priorities considering deadline distance
@@ -48,7 +49,7 @@ int rt_dtask_recalculateprio(){
 	RT_DTASK * rtdtask, * tmp;
 	RT_TASK_INFO task_info;
 	unsigned int newprio;
-	unsigned long curr_time, min_remain=0xffffffffffffffff, max_remain=0; // 2^64 -1
+	unsigned long long curr_time, min_remain=0xffffffffffffffff, max_remain=0; // 2^64 -1
 	int count=0, missed=0;
 	count=HASH_COUNT(dtask_map);
 	#ifdef DEBUG
@@ -57,7 +58,7 @@ int rt_dtask_recalculateprio(){
 	if (!count)
 		return 0;
 
-	curr_time=(unsigned long)rt_timer_read();
+	curr_time=(unsigned long long)rt_timer_read();
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET ){
 			rtdtask->dtask.remain=(rtdtask->dtask.deadline > curr_time ?
@@ -84,7 +85,7 @@ int rt_dtask_recalculateprio(){
 			}
 			newprio=_calculate_prio(rtdtask->dtask.remain, min_remain, max_remain );
 			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@dt_rcalcp] task(%s) oldP(%u) newP(%u) remain(%lu) maxRem(%lu) minRem=(%lu)\n",
+			rtdm_printk("Edfomai: [@dt_rcalcp] task(%s) oldP(%u) newP(%u) remain(%llu) maxRem(%llu) minRem=(%llu)\n",
 								rtdtask->dtask.task_info.name, rtdtask->dtask.task_info.cprio, 
 								newprio, rtdtask->dtask.remain ,max_remain, min_remain );
 			#endif
@@ -168,7 +169,7 @@ int rt_dtask_resetdeadline( RT_TASK * task){
 *
 * Note: might cause a priority recalculation
 */
-int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
+int rt_dtask_setdeadline(RT_TASK * task, unsigned long long newdeadline){
 	int ret=-1;
 	RT_DTASK * rtdtask;
 	RT_TASK_INFO * task_info = (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
@@ -176,7 +177,7 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
 	if (rtdtask){
 		#ifdef DEBUG
-		rtdm_printk("Edfomai: [@dt_setdline] setting deadline of task(%s) to %lu\n",
+		rtdm_printk("Edfomai: [@dt_setdline] setting deadline of task(%s) to %llu\n",
 										task_info->name, newdeadline);
 		#endif
 		rtdtask->dtask.relative_deadline = newdeadline;
@@ -201,7 +202,7 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 *
 * NOTE: cause a priority recalculation;
 */
-int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
+int rt_dtask_create ( RT_TASK * task, unsigned long long deadline ){
 	int res=-1;
 	RT_DTASK * rtdtask,* tmp;
 	//char a_name [TNAME_LEN+5];
@@ -213,13 +214,13 @@ int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
 	init_dtask( &(rtdtask->dtask) );
 	rtdtask->dtask.task = task;
 	rtdtask->dtask.relative_deadline = deadline;
-	rtdtask->dtask.deadline =  ((unsigned long) rt_timer_read()) + rtdtask->dtask.relative_deadline;
+	rtdtask->dtask.deadline =  ((unsigned long long) rt_timer_read()) + rtdtask->dtask.relative_deadline;
 	rtdtask->dtask.remain=rtdtask->dtask.relative_deadline;
 	rt_task_inquire( rtdtask->dtask.task , &(rtdtask->dtask.task_info) );
 	HASH_FIND_STR( dtask_map, rtdtask->dtask.task_info.name, tmp);
 	if (tmp==NULL){
 		#ifdef DEBUG
-		rtdm_printk("Edfomai: [@dt_create] creating dtask (%s) with deadline %lu\n",
+		rtdm_printk("Edfomai: [@dt_create] creating dtask (%s) with deadline %llu\n",
 			rtdtask->dtask.task_info.name, deadline);
 		#endif
 		//strncpy( (char*) &(a_name), (char*)&(rtdtask->dtask.task_info.name),TNAME_LEN);

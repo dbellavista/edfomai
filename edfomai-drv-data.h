@@ -45,9 +45,9 @@ typedef enum DeadlineState{
 * Structure that wrap an RT_TASK and permit deadline handling
 */
 typedef struct rt_deadline_task {
-	unsigned long deadline;
-	unsigned long remain;
-	unsigned long relative_deadline;
+	unsigned long long deadline;
+	unsigned long long remain;
+	unsigned long long relative_deadline;
 	DeadlineState status;
 	RT_TASK * task;
 	RT_ALARM * watchd;
@@ -77,7 +77,7 @@ int rt_dtask_resetdeadline( RT_TASK * task);
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 */
-int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline);
+int rt_dtask_setdeadline(RT_TASK * task, unsigned long long newdeadline);
 /*
 * Create a Task with deadline specification.
 * Deadline is relative and might be interpreted as the maximum task duration permitted.
@@ -85,7 +85,7 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline);
 * been compiled, ONESHOT or PERIODIC mode respectively)
 * Take a look at "A Tour of the Native API"
 */
-int rt_dtask_create ( RT_TASK * task, unsigned long deadline );
+int rt_dtask_create ( RT_TASK * task, unsigned long long deadline );
 /*
 * Delete a RT_TASK.
 * This exclude the specified RT_TASK from the EDF based priority rearrangment.

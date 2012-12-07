@@ -27,7 +27,7 @@ typedef enum EDFCommand {
 typedef struct EDFMessage {
 	EDFCommand command;
 	char task [TNAME_LEN+1];
-	unsigned long deadline;
+	unsigned long long deadline;
 } EDFMessage;
 
 #endif

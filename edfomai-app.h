@@ -18,7 +18,7 @@ int edf_dispose();
 * Setting deadline to DEADLINENOTSET will start the task with no deadline, so 
 * priority remains static (could be usefull in compination with other unimplemented APIs)
 */
-int edf_task_start( RT_TASK * task, unsigned long deadline, void (*procedure)(void *arg), void * arg );
+int edf_task_start( RT_TASK * task, unsigned long long deadline, void (*procedure)(void *arg), void * arg );
 /*
 * Wait a period (for periodic tasks only!)
 * Then deadline will be resetted to starting specified value.
