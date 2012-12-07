@@ -10,7 +10,7 @@
 
 #include "../edfomai-app.h"
 
-#define timeUnit 1e8
+#define timeUnit 100000000 // 100 000 000 ns
 RTIME t;
 
 RT_TASK task;

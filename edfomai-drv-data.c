@@ -202,6 +202,7 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long newdeadline){
 * NOTE: cause a priority recalculation;
 */
 int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
+	int res=-1;
 	RT_DTASK * rtdtask,* tmp;
 	//char a_name [TNAME_LEN+5];
 	#ifdef MODULE
@@ -228,15 +229,16 @@ int rt_dtask_create ( RT_TASK * task, unsigned long deadline ){
 		//if (rtdtask->dtask.relative_deadline != DEADLINENOTSET)
 		//	rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
 		HASH_ADD_STR( dtask_map, dtask.task_info.name , rtdtask);
+		res=0;
 	}else{
  		#ifdef DEBUG
 		rtdm_printk("Edfomai: [@dt_create] creation failed. Task (%s) already present\n",rtdtask->dtask.task_info.name);
 		#endif
 		rtdm_free(rtdtask);
-		return -1;
+		res=-1;
 	}
 	rt_dtask_recalculateprio();
-	return 0;
+	return res;
 }
 /*
 * Delete a RT_TASK.
