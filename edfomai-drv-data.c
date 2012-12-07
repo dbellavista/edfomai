@@ -60,7 +60,7 @@ int rt_dtask_recalculateprio(){
 
 	curr_time=(unsigned long long)rt_timer_read();
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
-		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET ){
+		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET && rtdtask->dtask.state==RUNNING){
 			rtdtask->dtask.remain=(rtdtask->dtask.deadline > curr_time ?
 							rtdtask->dtask.deadline - curr_time : 0);
 			if (rtdtask->dtask.remain==0)
@@ -69,13 +69,14 @@ int rt_dtask_recalculateprio(){
 			max_remain=(rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
 			rt_task_inquire(rtdtask->dtask.task,&task_info);
 			rt_task_inquire(rtdtask->dtask.task, &(rtdtask->dtask.task_info));
-		} 
+		}
 	}
 	#ifdef DEBUG
 	rtdm_printk("Edfomai: [@dt_rcalcp] #tasks(%d) #missed(%d)\n",count,missed);
 	#endif
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
-		if ( rtdtask->dtask.relative_deadline!=DEADLINENOTSET && rtdtask->dtask.status==OK ){
+		if ( rtdtask->dtask.relative_deadline!=DEADLINENOTSET && 
+				rtdtask->dtask.status==OK && rtdtask->dtask.state=RUNNING){
 			if (rtdtask->dtask.remain==0){
 				rtdtask->dtask.status=MISSED;
 				#ifdef DEBUG
@@ -96,6 +97,25 @@ int rt_dtask_recalculateprio(){
 	return 0;
 }
 /*
+* Notify scheduler thak specified RT_TASK is going to wait a period
+*/
+int rt_dtask_goingwaitp ( RT_TASK * task ){
+	int ret=-1;
+	RT_DTASK * rtdtask;
+	RT_TASK_INFO * task_info = (RT_TASK_INFO*) rtdm_malloc(sizeof(RT_TASK_INFO));
+	rt_task_inquire(task, task_info);
+	HASH_FIND_STR(dtask_map, task_info->name, rtdtask);
+	if (rtdtask){
+		#ifdef DEBUG
+		rtdm_printk("Edfomai: [@dt_goingwp] task (%s) is going to waitp\n",task_info->name);
+		#endif
+		rtdtask->dtask.state=GOING_WAITP;
+		ret=0;
+	}
+	rtdm_free(task_info);
+	return ret;
+}
+/*
 * Reset the watchdog of the specified task
 */
 int rt_dtask_stopwatchdog ( RT_TASK * task ){
@@ -108,6 +128,7 @@ int rt_dtask_stopwatchdog ( RT_TASK * task ){
 		#ifdef DEBUG
 		rtdm_printk("Edfomai: [@dt_stopwdg] stopping watchdog of task (%s)\n",task_info->name);
 		#endif
+		rt_dtask_goingwaitp(rtdtask->dtask.task);
 		ret=0;//rt_alarm_stop( rtdtask->dtask.watchd );
 	}
 	rtdm_free(task_info);
@@ -151,6 +172,7 @@ int rt_dtask_resetdeadline( RT_TASK * task){
 		rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.remain=rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.status=OK;
+		rtdtask->dtask.state=RUNNING;
 		// TODO: reset watchdog
 		//rt_alarm_stop( rtdtask->dtask.watchd );
 		//rt_alarm_start( rtdtask->dtask.watchd, rtdtask->dtask.relative_deadline, TM_INFINITE);
@@ -184,6 +206,7 @@ int rt_dtask_setdeadline(RT_TASK * task, unsigned long long newdeadline){
 		rtdtask->dtask.deadline = rt_timer_read() + rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.remain=rtdtask->dtask.relative_deadline;
 		rtdtask->dtask.status=OK;
+		rtdtask->dtask.state=RUNNING;
 		// TODO: reset watchdog
 		//rt_alarm_stop( rtdtask->dtask.watchd );
 		//if (rtdtask->dtask.relative_deadline != DEADLINENOTSET)

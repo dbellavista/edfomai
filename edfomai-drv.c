@@ -275,6 +275,27 @@ static ssize_t edf_rtdm_write_nrt(struct rtdm_dev_context *context, rtdm_user_in
 				return status;
 			}
 		break;
+		case GOING_WAITP:
+			#ifdef DEBUG
+			rtdm_printk("Edfomai: [@write] task (%s) is going to wait period\n",task->rname);
+			#endif
+			status=_mtx_acquire();
+			if (status){
+				rtdm_free(message);
+				return status;
+			}
+			status=rt_dtask_goingwaitp(task);
+			if (status){
+				#ifdef DEBUG
+				rtdm_printk("Edfomai: [@write] problems in going to wait period\n");
+				#endif
+			}
+			status=_mtx_release();
+			if (status){
+				rtdm_free(message);
+				return status;
+			}
+		break;
 		case RESET_DEADLINE:
 			#ifdef DEBUG
 			rtdm_printk("Edfomai: [@write] task reset deadline (%s)\n",task->rname);
@@ -404,7 +425,8 @@ int __init edf_rtdm_init(void)
 		
 		rtdm_event_init(&edf_event,0);
 		rtdm_task_init(&edf_svc, EDF_SVC_NAME,&_edf_service, NULL, RTDM_TASK_HIGHEST_PRIORITY, 0/*period*/);
-		res=rt_task_add_hook(T_HOOK_START|T_HOOK_SWITCH, &edf_startswitch_hook);
+		res=rt_task_add_hook(T_HOOK_START /*|T_HOOK_SWITCH should be useless*/, 
+						&edf_startswitch_hook);
 		if (res!=0){
 			rtdm_printk("Edfomai: [@init] start/switch hook failed registration with status (%d).\n",res);
 		}

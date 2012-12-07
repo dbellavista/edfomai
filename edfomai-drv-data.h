@@ -23,6 +23,7 @@
 			(dtask)->relative_deadline=DEADLINENOTSET; \
 			(dtask)->status=OK; \
 			(dtask)->task=NULL; \
+			(dtask)->state=RUNNING; \
 			(dtask)->watchd=(RT_ALARM *)rtdm_malloc(sizeof(RT_ALARM)); \
 	}
 #define reset_watchd( dtask ) { \
@@ -34,6 +35,13 @@
 			rtdm_free((dtask)->watchd); \
 	}
 
+/*
+* 
+*/
+typedef enum TaskState{
+	RUNNING=0,
+	WAITING_PERIOD=1
+} TaskState;
 /*
 * 
 */
@@ -49,6 +57,7 @@ typedef struct rt_deadline_task {
 	unsigned long long remain;
 	unsigned long long relative_deadline;
 	DeadlineState status;
+	TaskState state;
 	RT_TASK * task;
 	RT_ALARM * watchd;
 	RT_TASK_INFO task_info;
@@ -59,11 +68,15 @@ typedef struct rt_deadline_task {
 */
 int rt_dtask_recalculateprio(void);
 /*
-* Update the TASL_INFO structue of the associated RT_TASK
+* Update the TASK_INFO structue of the associated RT_TASK
 */
 int rt_dtask_updateinfo ( RT_TASK * task );
 /*
-* Update the TASL_INFO structue of the associated RT_TASK
+* Notify scheduler thak specified RT_TASK is going to wait a period
+*/
+int rt_dtask_goingwaitp ( RT_TASK * task );
+/*
+* Stop the associated Watchdog
 */
 int rt_dtask_stopwatchdog ( RT_TASK * task );
 /*
