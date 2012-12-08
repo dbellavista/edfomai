@@ -1,3 +1,103 @@
+==== MARS_ROVER LOG ====
+initialized.
+starting up...
+[sensor] started
+[sensor] executing
+[sensor] executing
+Edfomai: [@waitperiod] task(sensor) wait next period
+[processor] started
+[processor] executing
+[processor] executing
+[processor] executing
+Edfomai: [@waitperiod] task(processor) wait next period
+[actuator] started
+[actuator] executing
+[actuator] executing
+Edfomai: [@waitperiod] task(actuator) wait next period
+[comunicator] sending: 1
+[comunicator] sent: 1
+Edfomai: [@waitperiod] task(comunicator) wait next period
+waiting Ctrl+C
+Edfomai: [@waitperiod] task(sensor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+Edfomai: [@waitperiod] task(processor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+Edfomai: [@waitperiod] task(actuator) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[sensor] executing
+[sensor] executing
+Edfomai: [@waitperiod] task(sensor) wait next period
+Edfomai: [@waitperiod] task(sensor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[sensor] executing
+[sensor] executing
+Edfomai: [@waitperiod] task(sensor) wait next period
+[processor] executing
+[processor] executing
+[processor] executing
+Edfomai: [@waitperiod] task(processor) wait next period
+Edfomai: [@waitperiod] task(processor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[processor] executing
+[processor] executing
+[processor] executing
+[actuator] executing
+[actuator] executing
+Edfomai: [@waitperiod] task(actuator) wait next period
+Edfomai: [@waitperiod] task(actuator) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+Edfomai: [@waitperiod] task(processor) wait next period
+Edfomai: [@waitperiod] task(sensor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[actuator] executing
+[actuator] executing
+[sensor] executing
+[sensor] executing
+Edfomai: [@waitperiod] task(processor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+Edfomai: [@waitperiod] task(sensor) wait next period
+Edfomai: [@waitperiod] task(actuator) wait next period
+[processor] executing
+Edfomai: [@waitperiod] task(actuator) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[processor] executing
+[processor] executing
+Edfomai: [@waitperiod] task(processor) wait next period
+[actuator] executing
+[actuator] executing
+Edfomai: [@waitperiod] task(actuator) wait next period
+Edfomai: [@waitperiod] task(sensor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[sensor] executing
+[sensor] executing
+Edfomai: [@waitperiod] task(sensor) wait next period
+Edfomai: [@waitperiod] task(processor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[processor] executing
+[processor] executing
+[processor] executing
+Edfomai: [@waitperiod] task(processor) wait next period
+Edfomai: [@waitperiod] task(actuator) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[actuator] executing
+[actuator] executing
+Edfomai: [@waitperiod] task(actuator) wait next period
+Edfomai: [@waitperiod] task(sensor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[sensor] executing
+[sensor] executing
+Edfomai: [@waitperiod] task(sensor) wait next period
+^CEdfomai: [@waitperiod] task(processor) awaken ret(0)
+Edfomai: [@waitperiod] sending reset request
+[processor] executing
+[processor] executing
+[processor] executing
+--should I exit?--
+closing...
+cleaned
+
+==== DMESG LOG ====
+
 [  111.686767] Edfomai: [@open] device has been opened
 [  111.687185] Edfomai: [@write] serving request for task (sensor)
 [  111.687191] Edfomai: [@write] task creation (sensor)
