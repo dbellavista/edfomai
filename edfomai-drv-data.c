@@ -13,6 +13,23 @@
 #define MAXPRIO 50 //RTDM_TASK_HIGHEST_PRIORITY
 #define MINPRIO 0  //RTDM_TASK_LOWER_PRIORITY
 
+/*
+* 64bit divisor,divident and result.
+* Credits: lib/div64.c
+*/
+uint64_t div64_64(uint64_t dividend, uint64_t divisor){
+        uint32_t high, d;
+        high = divisor >> 32;
+        if (high) {
+                unsigned int shift = fls(high);
+                d = divisor >> shift;
+                dividend >>= shift;
+        } else
+                d = divisor;
+        do_div(dividend, d);
+        return dividend;
+}
+
 /* 
 * RT_DEADLINE_TASK managable by uthash
 */
@@ -33,11 +50,15 @@ extern void deadline_missed( struct rt_alarm *alarm, void * cookie );
 /*
 * Returns the priority associated with the remaining time 
 */
-static inline int _calculate_prio( unsigned long remain, 
-			unsigned long min_remain, unsigned long max_remain){
-	long a = (remain-min_remain) * (MAXPRIO-MINPRIO);
-	long b = ( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain );
-	return  MAXPRIO - (unsigned long ) div64_64(a, b);
+static inline int _calculate_prio( uint64_t remain, 
+			uint64_t min_remain, uint64_t max_remain){
+	uint64_t a = (remain-min_remain) * (MAXPRIO-MINPRIO);
+	uint64_t b = ( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain );
+	uint64_t r = div64_64(a, b);
+	#ifdef DEBUG
+	//rtdm_printk("Edfomai: [@_calcp] a(%llu) b(%llu) r(%llu)\n",a,b,r);
+	#endif
+	return  MAXPRIO - (int) r;
 }
 /*
 * Recalculate tasks priorities considering deadline distance
@@ -50,7 +71,7 @@ int rt_dtask_recalculateprio(){
 	RT_TASK_INFO task_info;
 	unsigned int newprio;
 	unsigned long long curr_time, min_remain=0xffffffffffffffff, max_remain=0; // 2^64 -1
-	int count=0, missed=0;
+	int count=0, missed=0, notset=0, waitp=0;
 	count=HASH_COUNT(dtask_map);
 	#ifdef DEBUG
 	rtdm_printk("Edfomai: [@dt_rcalcp] recalculating priorities of %d tasks\n",count);
@@ -63,20 +84,26 @@ int rt_dtask_recalculateprio(){
 		if (rtdtask->dtask.relative_deadline != DEADLINENOTSET && rtdtask->dtask.state==RUNNING){
 			rtdtask->dtask.remain=(rtdtask->dtask.deadline > curr_time ?
 							rtdtask->dtask.deadline - curr_time : 0);
+			#ifdef DEBUG
 			if (rtdtask->dtask.remain==0)
 				missed++;
+			#endif
 			min_remain=(rtdtask->dtask.remain < min_remain ? rtdtask->dtask.remain : min_remain );
 			max_remain=(rtdtask->dtask.remain > max_remain ? rtdtask->dtask.remain : max_remain );
 			rt_task_inquire(rtdtask->dtask.task,&task_info);
 			rt_task_inquire(rtdtask->dtask.task, &(rtdtask->dtask.task_info));
 		}
+		#ifdef DEBUG
+		else if( rtdtask->dtask.relative_deadline==DEADLINENOTSET ){notset++;
+			} else if (rtdtask->dtask.state!=RUNNING){waitp++;}
+		#endif
 	}
 	#ifdef DEBUG
-	rtdm_printk("Edfomai: [@dt_rcalcp] #tasks(%d) #missed(%d)\n",count,missed);
+	rtdm_printk("Edfomai: [@dt_rcalcp] #tasks(%d) #missed(%d) #notset(%d) #waitp(%d)\n",count,missed,notset,waitp);
 	#endif
 	HASH_ITER(hh, dtask_map, rtdtask, tmp) {
 		if ( rtdtask->dtask.relative_deadline!=DEADLINENOTSET && 
-				rtdtask->dtask.status==OK && rtdtask->dtask.state=RUNNING){
+				rtdtask->dtask.status==OK && rtdtask->dtask.state==RUNNING){
 			if (rtdtask->dtask.remain==0){
 				rtdtask->dtask.status=MISSED;
 				#ifdef DEBUG
@@ -86,7 +113,7 @@ int rt_dtask_recalculateprio(){
 			}
 			newprio=_calculate_prio(rtdtask->dtask.remain, min_remain, max_remain );
 			#ifdef DEBUG
-			rtdm_printk("Edfomai: [@dt_rcalcp] task(%s) oldP(%u) newP(%u) remain(%llu) maxRem(%llu) minRem=(%llu)\n",
+			rtdm_printk("Edfomai: [@dt_rcalcp] task(%s) oldP(%u) newP(%u) rem(%llu) maxRem(%llu) minRem=(%llu)\n",
 								rtdtask->dtask.task_info.name, rtdtask->dtask.task_info.cprio, 
 								newprio, rtdtask->dtask.remain ,max_remain, min_remain );
 			#endif
