@@ -30,6 +30,19 @@ module and by wrapping user/driver communication we can also provide a handy use
 
 Edfomai Driver module doesn't simply react to user messages, it also starts a priority recalculation service which is wake up every time the scheduler is invoked, in order to safely recalculate and set current tasks priority.
 
+#### Features
+-------
+* EDF scheduling policy over RMPO scheduler
+* Support to both sporadic and periodic tasks
+* Deadline miss notification (first draft, we use an `RT_QUEUE` at the moment)
+* No kernel recompilation
+
+#### Further Work
+-------
+* Improve priority recalculation complexity: from `O(N+N)` to `O(log(N)+N)`
+* Refine deadline miss detection enabling per task watchdog
+* Improve user APIs
+
 #### Techincal Notes
 -------
 Here we summarize the key-point of our EDF scheduling policy implementation, in particular we'll show most interesting 
@@ -44,6 +57,14 @@ Xenomai APIs that had enabled us to build the system.
 After this quick glance to these APIs it's pretty immediate understand the reason which made us move to the architecure descripted above, in fact priority recalculation service avoid kernel hanging caused by the recoursive invocation of scheduler, hook procedure and set_priority. 
 
 Deadline related data has been stored in ad hoc data structures where relative deadline, absolute deadline and remaining time are stored. For the sake of simplicity (lack of time) we decided to adapt `uthash` hash map to kernel space, this way we obtain a scheduling complexity of `O(2N)` which should not be the maximum performance reachable, but it's acceptable for our purposes.
+
+#### Code Map
+-------
+* `edfomai` contains source code of kernel module (`edfomai-drv*`), user API (`edfomai-app*`) and a couple of test programs
+* `edfomai/exercise-xenomai` contains some xenomai test programs (pretty useless, I tink we will erase'em all)
+* `edfomai/exercise-edfomai` contains some edfomai test programs (demo purposes)
+* `edfomai/datastructures` contains modified uthash source code (http://uthash.sourceforge.net/)
+* `edfomai/kernel-images` contains both header and binaries of a xenomai patched kernel (x86_32) useful for testing purposes.
 
 #### Build
 -------
