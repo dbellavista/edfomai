@@ -37,7 +37,7 @@ static inline int _calculate_prio( unsigned long remain,
 			unsigned long min_remain, unsigned long max_remain){
 	long a = (remain-min_remain) * (MAXPRIO-MINPRIO);
 	long b = ( (max_remain-min_remain)==0? (remain?remain:1) : max_remain-min_remain );
-	return  MAXPRIO - (unsigned long ) a / b ;
+	return  MAXPRIO - (unsigned long ) div64_64(a, b);
 }
 /*
 * Recalculate tasks priorities considering deadline distance
