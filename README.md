@@ -15,18 +15,18 @@ low level APIs to build a Kernel module that hooks to the Kernel scheduler and c
 In order to avoid new syscall definition (and consequential Kernel modification) we decide to develop a device-driver
 module and by wrapping user/driver communication we can also provide a handy user API, pretty similar to the native one.
 
-* `.----------.                            `
-* `| RT Task  |-------------------.        `
-* `'----|-----'                   |        `
-* `     |                         |        `
-* `.----|--------------.    ,-----|-------.`
-* `| Edfomai User API  | __ | Native skin |`  
-* `'---|---------------'    '-------------'`
-* `    |                                   `   
-* `.---|-----,----------------------------.`  
-* `| Edfomai |       Kernel               |`
-* `| Driver  |      (Nucleus)             |`   
-* `'---------'----------------------------'`
+    .----------.                            
+    | RT Task  |-------------------.        
+    '----|-----'                   |        
+         |                         |        
+    .----|--------------.    ,-----|-------.
+    | Edfomai User API  | __ | Native skin |  
+    '---|---------------'    '-------------'
+        |                                      
+    .---|-----,----------------------------.  
+    | Edfomai |       Kernel               |
+    | Driver  |      (Nucleus)             |   
+    '---------'----------------------------'
 
 Edfomai Driver module doesn't simply react to user messages, it also starts a priority recalculation service which is wake up every time the scheduler is invoked, in order to safely recalculate and set current tasks priority.
 
